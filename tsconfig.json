@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "module": "NodeNext", // Quy định output module được sử dụng
+        "moduleResolution": "NodeNext",
+        "target": "ES2022", // Target output cho code
+        "outDir": "dist", // Đường dẫn output cho thư mục build
+        "esModuleInterop": true,
+        "strict": true /* Enable all strict type-checking options. */,
+        "strictPropertyInitialization": false /* Enable strict checking of property initialization in classes. */,
+        "experimentalDecorators": true /* Enables experimental support for ES7 decorators. */,
+        "emitDecoratorMetadata": true /* Enables experimental support for emitting type metadata for decorators. */,
+        "skipLibCheck": true /* Skip type checking all .d.ts files. */,
+        "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */,
+        "baseUrl": ".", // Đường dẫn base cho các import
+        "paths": {
+            "@ecommerce-backend/src/*": ["src/*"] // Đường dẫn tương đối cho các import (alias)
+        }
+    },
+    "ts-node": {
+        "require": ["tsconfig-paths/register"]
+    },
+    "include": ["src/**/*"] // Đường dẫn include cho các file cần build
+}

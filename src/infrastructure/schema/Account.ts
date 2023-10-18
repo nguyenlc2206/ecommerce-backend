@@ -1,0 +1,63 @@
+// * import libs
+import mongoose from 'mongoose';
+import validator from 'validator';
+
+/** init account entity schema */
+const AccountSchema = new mongoose.Schema(
+    {
+        fullName: {
+            type: String,
+            required: [true, 'Please tell us your name!'],
+            loswercase: true
+        },
+        phoneNo: {
+            type: String,
+            required: [true, 'Please tell us your phone!']
+        },
+        avatar: {
+            type: String,
+            required: false,
+            default: null
+        },
+        email: {
+            type: String,
+            required: [true, 'Please tell us your email!'],
+            unique: true,
+            loswercase: true,
+            validate: [validator.isEmail, 'Please provide a valid email']
+        },
+        password: {
+            type: String,
+            required: [true, 'Please tell us your password!'],
+            minlength: 6,
+            select: false
+        },
+        role: {
+            type: String,
+            enum: ['admin', 'manager', 'staff', 'customer'],
+            default: 'customer'
+        },
+        passwordChangedAt: {
+            type: Date,
+            default: Date.now
+        },
+        isDeleted: {
+            type: Boolean,
+            required: true,
+            default: false
+        },
+        deletedAt: {
+            type: Date,
+            default: null
+        }
+    },
+    {
+        timestamps: true,
+        toJSON: { virtuals: true }
+    }
+);
+
+// * compile the schema to model
+const AccountEntity = mongoose.model('Account', AccountSchema);
+
+export default AccountEntity;
