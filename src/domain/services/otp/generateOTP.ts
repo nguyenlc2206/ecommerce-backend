@@ -75,11 +75,9 @@ export class GenerateOTPServiceImpl<Entity extends AccountModel> implements Gene
         const result = _initOTPModel.fromOTPModelToChangePassword(resultOTP.data);
 
         //* send email
-        if (OTPInfo.OTPRetry) {
-            if (OTPInfo.OTPRetry > 0 || !resultGetOTP.data) {
-                const resultSend = this.handleSendOTP(account, OTP);
-                if (resultSend.isFailure()) return failure(resultSend.error);
-            }
+        if ((OTPInfo?.OTPRetry && OTPInfo?.OTPRetry > 0) || !resultGetOTP.data) {
+            const resultSend = this.handleSendOTP(account, OTP);
+            if (resultSend.isFailure()) return failure(resultSend.error);
         }
 
         return success(result);

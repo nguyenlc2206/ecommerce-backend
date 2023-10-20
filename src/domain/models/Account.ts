@@ -35,6 +35,7 @@ export class AccountModel {
             phoneNo: account?.phoneNo,
             role: account?.role,
             isDeleted: account?.isDeleted,
+            avatar: account?.avatar,
             accessToken: token
         } as AccountModel;
     }

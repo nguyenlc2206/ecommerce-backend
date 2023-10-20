@@ -37,7 +37,7 @@ export class UpdateAccountServiceImpl<Entity extends AccountRequest> implements 
         const resultGet = await this.handleGetAccount(entity?.params?.id);
         if (resultGet.isFailure()) return failure(resultGet.error);
         const { data: account } = resultGet;
-        console.log('>>>Check account:', account);
+        // console.log('>>>Check account:', account);
 
         /** handle update avatar */
         let _entity = {} as AccountModel;

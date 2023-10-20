@@ -37,6 +37,7 @@ export interface AccountRequest extends Request {
     role?: string;
     password?: string;
     account?: AccountModel;
+    accessToken?: string;
 }
 
 export type RolesType = {

@@ -7,6 +7,7 @@ import { LoginController } from '@ecommerce-backend/src/main/controllers/authent
 import { ProtectedRoutesController } from '@ecommerce-backend/src/main/controllers/authentication/protect.controller';
 import { ChangePasswordController } from '@ecommerce-backend/src/main/controllers/authentication/changePassword.controller';
 import { ForgotPasswordController } from '@ecommerce-backend/src/main/controllers/authentication/forgotPassword.controller';
+import { LogoutController } from '@ecommerce-backend/src/main/controllers/authentication/logout.controller';
 
 // ==============================||  AUTHENTICATION CONTROLLER ||============================== //
 
@@ -18,6 +19,12 @@ export class AuthenticationController {
     /** login method */
     login = async (req: Request, res: Response, next: NextFunction) => {
         const _init = new LoginController();
+        return _init.execute(req, res, next);
+    };
+
+    /** logout method */
+    logout = async (req: Request, res: Response, next: NextFunction) => {
+        const _init = new LogoutController();
         return _init.execute(req, res, next);
     };
 

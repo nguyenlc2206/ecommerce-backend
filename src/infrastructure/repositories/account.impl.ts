@@ -33,7 +33,7 @@ export class AccountRepositoryImpl<T extends AccountModel> implements AccountRep
 
     /** overiding getById method */
     async getById(id: string): Promise<T> {
-        const result = await AccountEntity.findById(id);
+        const result = await AccountEntity.findById(id).select('+password');
         return result as T;
     }
 

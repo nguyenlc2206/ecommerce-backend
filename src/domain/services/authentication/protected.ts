@@ -4,13 +4,18 @@ import { Container, Service } from 'typedi';
 
 // * import projects
 import AppError from '@ecommerce-backend/src/shared/common/appError';
+import ENV from '@ecommerce-backend/src/main/config/env';
+
 import { AccountRequest, DecodeAccountTokenType } from '@ecommerce-backend/src/shared/types';
 import { Either, failure, success } from '@ecommerce-backend/src/shared/common/either';
 import { AccountRepository } from '@ecommerce-backend/src/domain/repositories/account';
 import { AccountModel } from '@ecommerce-backend/src/domain/models/Account';
 import { AccountRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/account.impl';
-import ENV from '@ecommerce-backend/src/main/config/env';
+
 import { TokenGeneratorAdapter } from '@ecommerce-backend/src/shared/common/jwt';
+import { TokenRepository } from '@ecommerce-backend/src/domain/repositories/token';
+import { TokenModel } from '@ecommerce-backend/src/domain/models/Token';
+import { TokenRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/token.impl';
 
 // ==============================||  PROTECT SERVICES IMPLEMENT ||============================== //
 
@@ -21,10 +26,12 @@ export interface ProtectedService<Entity> {
 @Service()
 export class ProtectedServiceImpl<Entity extends AccountRequest> implements ProtectedService<Entity> {
     protected accountRepo: AccountRepository<AccountModel>;
+    protected tokenRepo: TokenRepository<TokenModel>;
 
     // * constructor
     constructor() {
         this.accountRepo = Container.get(AccountRepositoryImpl);
+        this.tokenRepo = Container.get(TokenRepositoryImpl);
     }
 
     /** overiding execute method */
@@ -45,8 +52,13 @@ export class ProtectedServiceImpl<Entity extends AccountRequest> implements Prot
         if (resultGet.isFailure()) return failure(resultGet.error);
         // console.log('>>>Check result:', resultGet.data);
 
+        //* Check email
         const isCheckEmail = this.handleCheckEmailChanged(keyParse?.email, resultGet.data?.email);
         if (!isCheckEmail) return failure(new AppError('User recently change email! Please login again.', 401));
+
+        // * Get token from database
+        const resultTokenGet = await this.handeGetToken(keyParse?.id, accessToken);
+        if (resultTokenGet.isFailure()) return failure(resultTokenGet.error);
 
         //* Check if cusomter changed password after the token was issued
         const passwordChangedAt = resultGet.data?.passwordChangedAt;
@@ -54,7 +66,15 @@ export class ProtectedServiceImpl<Entity extends AccountRequest> implements Prot
         if (resultChangedAt.isFailure()) return failure(resultChangedAt.error);
 
         // * processing account request
-        return success(resultGet.data);
+        return success({
+            password: resultGet.data?.password,
+            id: resultGet.data?.id,
+            email: resultGet.data?.email,
+            phoneNo: resultGet.data?.phoneNo,
+            fullName: resultGet.data?.fullName,
+            role: resultGet.data?.role,
+            accessToken: accessToken
+        } as AccountModel);
     }
 
     /** @todo: Getting tokken and check of it's there**/
@@ -65,6 +85,13 @@ export class ProtectedServiceImpl<Entity extends AccountRequest> implements Prot
         }
         if (!accessToken) return failure(new AppError('You are not login. Please login to get access!', 401));
         return success(accessToken);
+    };
+
+    /** @todo: get token by userId and token form database */
+    private handeGetToken = async (id?: string, token?: string): Promise<Either<TokenModel, AppError>> => {
+        const response = await this.tokenRepo.getByUserId(id, token);
+        if (!response) return failure(new AppError('Token is expires!', 401));
+        return success(response);
     };
 
     /** @todo: Verification token **/

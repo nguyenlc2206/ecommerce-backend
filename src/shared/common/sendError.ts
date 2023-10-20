@@ -1,8 +1,15 @@
 import { Response } from 'express';
-import { ControllerError } from '@ecommerce-backend/src/shared/types';
+import Container from 'typedi';
+
+import { AccountRequest, ControllerError } from '@ecommerce-backend/src/shared/types';
+import { TokenRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/token.impl';
+
+const tokenRepo = Container.get(TokenRepositoryImpl);
 
 /**  send response on env development */
-export const sendErrorDev = (err: ControllerError, res: Response) => {
+export const sendErrorDev = (err: ControllerError, req: AccountRequest, res: Response) => {
+    if (err.statusCode === 402) tokenRepo.delete(req?.accessToken);
+
     // console.log(">>>Check error:", err);
     res.status(err.statusCode).json({
         status: err.status,
@@ -15,8 +22,9 @@ export const sendErrorDev = (err: ControllerError, res: Response) => {
 };
 
 /**  send response on env productions */
-export const sendErrorProd = (err: ControllerError, res: Response) => {
-    // console.log(">>>Check error:", err);
+export const sendErrorProd = (err: ControllerError, req: AccountRequest, res: Response) => {
+    if (err.statusCode === 402) tokenRepo.delete(req?.accessToken);
+
     // Operational, trusted error: send message to client
     if (err.isOperational) {
         res.status(err.statusCode).json({

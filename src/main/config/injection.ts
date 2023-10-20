@@ -28,10 +28,12 @@ import { GetAllAccountServiceImpl } from '@ecommerce-backend/src/domain/services
 import { DeleteAccountServiceImpl } from '@ecommerce-backend/src/domain/services/account/delete';
 import { UpdateAccountServiceImpl } from '@ecommerce-backend/src/domain/services/account/update';
 import { GetAccountByIdServiceImpl } from '@ecommerce-backend/src/domain/services/account/getById';
+import { LogoutServiceImpl } from '@ecommerce-backend/src/domain/services/authentication/logout';
 
 // * import repository
 import { AccountRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/account.impl';
 import { OTPRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/otp.impl';
+import { TokenRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/token.impl';
 
 // ==============================||  INJECTTION INIT ||============================== //
 
@@ -61,6 +63,8 @@ const InjectionInit = catchAsync(async () => {
     Container.set(ProtectedServiceImpl, new ProtectedServiceImpl());
     Container.set(ChangePasswordServiceImpl, new ChangePasswordServiceImpl());
     Container.set(ForgotPasswordServiceImpl, new ForgotPasswordServiceImpl());
+    Container.set(LogoutServiceImpl, new LogoutServiceImpl());
+
     // * define OTP services
     Container.set(VerifyOTPServiceImpl, new VerifyOTPServiceImpl());
     Container.set(GenerateOTPServiceImpl, new GenerateOTPServiceImpl());
@@ -68,6 +72,7 @@ const InjectionInit = catchAsync(async () => {
     // * define account repository
     Container.set(AccountRepositoryImpl, new AccountRepositoryImpl());
     Container.set(OTPRepositoryImpl, new OTPRepositoryImpl());
+    Container.set(TokenRepositoryImpl, new TokenRepositoryImpl());
 });
 
 export default InjectionInit;

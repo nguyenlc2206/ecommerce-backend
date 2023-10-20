@@ -20,4 +20,6 @@ export const AuthenticationRoutes = (router: Router) => {
     router.patch('/change-password', instanceAuth.protect, instanceAuth.changePassword);
     // * forgot password
     router.patch('/forgot-password', instanceAuth.forgotPassword);
+    // * logout router
+    router.get('/logout', instanceAuth.protect, instanceAuth.logout);
 };
