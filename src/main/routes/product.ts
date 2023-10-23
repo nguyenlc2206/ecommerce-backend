@@ -13,8 +13,16 @@ const instanceAuth = Container.get(AuthenticationController);
 
 /** @todo: init routes */
 export const ProductRoutes = (router: Router) => {
-    // protect routes
-    router.use(instanceAuth.protect);
     /** create method */
-    router.post('/product', middlewareRoleRestrictTo(['admin']), instanceProduct.create);
+    router.post('/product', instanceAuth.protect, middlewareRoleRestrictTo(['admin']), instanceProduct.create);
+    /** update method */
+    router.patch('/product/:id', instanceAuth.protect, middlewareRoleRestrictTo(['admin']), instanceProduct.update);
+    /** delete method */
+    router.delete('/product/:id', instanceAuth.protect, middlewareRoleRestrictTo(['admin']), instanceProduct.delete);
+    /** getAll method */
+    router.get('/product/getAll', instanceAuth.protect, instanceProduct.getAll);
+    /** get product by id */
+    router.get('/product/:id', instanceAuth.protect, instanceProduct.getById);
+    /** get product by id and size*/
+    router.get('/product?:id?:size', instanceAuth.protect, instanceProduct.getByIdAndSize);
 };

@@ -13,6 +13,9 @@ export class CategoryModel {
     products: Array<any>;
 
     fromCategoryModelCreate(category: CategoryModel) {
+        if (category?.isDeleted) {
+            return {} as CategoryModel;
+        }
         return {
             id: category?.id,
             image: category?.image,
@@ -23,13 +26,15 @@ export class CategoryModel {
     fromCategoryModelGetAll(category: CategoryModel[]) {
         let categories: CategoryModel[] = [];
         category?.map((item: CategoryModel) => {
-            categories.push({
-                id: item?.id,
-                name: item?.name,
-                image: item?.image,
-                accountId: item?.accountId,
-                isDeleted: item?.isDeleted
-            } as CategoryModel);
+            if (!item?.isDeleted) {
+                categories.push({
+                    id: item?.id,
+                    name: item?.name,
+                    image: item?.image,
+                    accountId: item?.accountId,
+                    isDeleted: item?.isDeleted
+                } as CategoryModel);
+            }
         });
 
         return categories;

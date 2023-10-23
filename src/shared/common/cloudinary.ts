@@ -30,4 +30,15 @@ export class Cloudinary<T extends KeyedObject> implements CloudinaryMethods<T> {
         });
         return response;
     }
+
+    /** overiding getImageById method */
+    async getImageById(id: string): Promise<void> {
+        try {
+            // Get details about the asset
+            const response = await cloudinary.api.resource(id);
+            return response;
+        } catch (error) {
+            console.error(error);
+        }
+    }
 }

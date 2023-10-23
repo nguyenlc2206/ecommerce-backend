@@ -13,16 +13,14 @@ const instanceAuth = Container.get(AuthenticationController);
 
 /** @todo: init routes */
 export const CategoryRoutes = (router: Router) => {
-    // protect routes
-    router.use(instanceAuth.protect);
     /** create method */
-    router.post('/category', middlewareRoleRestrictTo(['admin']), instanceCategory.create);
+    router.post('/category', instanceAuth.protect, middlewareRoleRestrictTo(['admin']), instanceCategory.create);
     /** update method */
-    router.patch('/category/:id', middlewareRoleRestrictTo(['admin']), instanceCategory.update);
+    router.patch('/category/:id', instanceAuth.protect, middlewareRoleRestrictTo(['admin']), instanceCategory.update);
     /** delete method */
-    router.delete('/category/:id', middlewareRoleRestrictTo(['admin']), instanceCategory.delete);
+    router.delete('/category/:id', instanceAuth.protect, middlewareRoleRestrictTo(['admin']), instanceCategory.delete);
     /** getAll mwthod */
-    router.get('/category/getAll', instanceCategory.getAll);
+    router.get('/category/getAll', instanceAuth.protect, instanceCategory.getAll);
     /** get account by id */
-    router.get('/category/:id', instanceCategory.getById);
+    router.get('/category/:id', instanceAuth.protect, instanceCategory.getById);
 };

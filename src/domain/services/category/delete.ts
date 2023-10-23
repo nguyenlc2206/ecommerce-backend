@@ -5,8 +5,6 @@ import { Container, Service } from 'typedi';
 // * import projects
 import AppError from '@ecommerce-backend/src/shared/common/appError';
 import { Either, failure, success } from '@ecommerce-backend/src/shared/common/either';
-import { AccountModel } from '@ecommerce-backend/src/domain/models/Account';
-import { AccountRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/account.impl';
 import { AccountRequest } from '@ecommerce-backend/src/shared/types';
 import { CategoryRepository } from '@ecommerce-backend/src/domain/repositories/category';
 import { CategoryRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/category';

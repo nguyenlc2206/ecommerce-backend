@@ -38,6 +38,13 @@ import { DeleteCategoryServiceImpl } from '@ecommerce-backend/src/domain/service
 import { GetAllCategoryServiceImpl } from '@ecommerce-backend/src/domain/services/category/getAll';
 import { GetCategoryByIdServiceImpl } from '@ecommerce-backend/src/domain/services/category/getById';
 
+import { CreateProductServiceImpl } from '@ecommerce-backend/src/domain/services/product/create';
+import { UpdateProductServiceImpl } from '@ecommerce-backend/src/domain/services/product/update';
+import { DeleteProductServiceImpl } from '@ecommerce-backend/src/domain/services/product/delete';
+import { GetProductByIdServiceImpl } from '@ecommerce-backend/src/domain/services/product/getById';
+import { GetAllProductServiceImpl } from '@ecommerce-backend/src/domain/services/product/getAll';
+import { GetProductByIdAndSizeServiceImpl } from '@ecommerce-backend/src/domain/services/product/getByIdAndSize';
+
 // * import repository
 import { AccountRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/account.impl';
 import { OTPRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/otp.impl';
@@ -90,6 +97,14 @@ const InjectionInit = catchAsync(async () => {
     Container.set(DeleteCategoryServiceImpl, new DeleteCategoryServiceImpl());
     Container.set(GetAllCategoryServiceImpl, new GetAllCategoryServiceImpl());
     Container.set(GetCategoryByIdServiceImpl, new GetCategoryByIdServiceImpl());
+
+    // * define product services
+    Container.set(CreateProductServiceImpl, new CreateProductServiceImpl());
+    Container.set(UpdateProductServiceImpl, new UpdateProductServiceImpl());
+    Container.set(DeleteProductServiceImpl, new DeleteProductServiceImpl());
+    Container.set(GetProductByIdServiceImpl, new GetProductByIdServiceImpl());
+    Container.set(GetAllProductServiceImpl, new GetAllProductServiceImpl());
+    Container.set(GetProductByIdAndSizeServiceImpl, new GetProductByIdAndSizeServiceImpl());
 
     /** @todo: define store, repository */
     // * define account repository
