@@ -39,7 +39,7 @@ export class ValidationUpdateAccount {
         }
 
         /** @todo: Validate field valid **/
-        validations.push(new ValidFieldsValidation(fields));
+        validations.push(new ValidFieldsValidation(fields, ['fullName', 'phoneNo', 'avatar', 'email']));
 
         /** @todo: init validationComposite **/
         const validationComposite = new ValidationComposite(validations);

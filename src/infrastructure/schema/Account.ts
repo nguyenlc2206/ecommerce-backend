@@ -1,5 +1,5 @@
 // * import libs
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import validator from 'validator';
 
 /** init account entity schema */
@@ -53,9 +53,24 @@ const AccountSchema = new mongoose.Schema(
     },
     {
         timestamps: true,
-        toJSON: { virtuals: true }
+        toJSON: { virtuals: true },
+        toObject: { virtuals: true }
     }
 );
+
+/** define relation one to many category */
+AccountSchema.virtual('AccountCategories', {
+    ref: 'Category', //The Model to use
+    localField: '_id', //Find in Model, where localField
+    foreignField: 'accountId' // is equal to foreignField
+});
+
+/** define relation one to many product */
+AccountSchema.virtual('AccountProducts', {
+    ref: 'Product', //The Model to use
+    localField: '_id', //Find in Model, where localField
+    foreignField: 'accountId' // is equal to foreignField
+});
 
 // * compile the schema to model
 const AccountEntity = mongoose.model('Account', AccountSchema);

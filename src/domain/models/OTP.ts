@@ -3,7 +3,7 @@ import { KeyedObject } from '@ecommerce-backend/src/shared/types';
 /** @todo: define OTP model reponse */
 export class OTPModel {
     id?: string;
-    userId?: string;
+    accountId?: string;
     OTP?: string;
     OTPCreatedTime?: Date;
     OTPAttempts?: number;

@@ -87,9 +87,9 @@ export class ProtectedServiceImpl<Entity extends AccountRequest> implements Prot
         return success(accessToken);
     };
 
-    /** @todo: get token by userId and token form database */
+    /** @todo: get token by accountId and token form database */
     private handeGetToken = async (id?: string, token?: string): Promise<Either<TokenModel, AppError>> => {
-        const response = await this.tokenRepo.getByUserId(id, token);
+        const response = await this.tokenRepo.getByaccountId(id, token);
         if (!response) return failure(new AppError('Token is expires!', 401));
         return success(response);
     };

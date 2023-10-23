@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 /** init Token schema */
 const TokenSchema = new mongoose.Schema(
     {
-        userId: { type: mongoose.Schema.Types.ObjectId, ref: 'AccountEntity', required: true },
+        accountId: { type: mongoose.Schema.Types.ObjectId, ref: 'Account', required: true },
         token: { type: String, required: true },
         createdTime: { type: Date, required: true }
     },

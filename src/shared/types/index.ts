@@ -32,7 +32,7 @@ export type ParamsImageType = {
 
 /** Define userInfor */
 export interface AccountRequest extends Request {
-    userId?: string;
+    accountId?: string;
     email?: string;
     role?: string;
     password?: string;

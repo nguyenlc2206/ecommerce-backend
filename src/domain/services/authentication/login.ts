@@ -92,7 +92,7 @@ export class LoginServiceImpl<Entity extends AccountModel> implements LoginServi
     /** hande save token to database */
     private handleSaveToken = async (account?: AccountModel, token?: string): Promise<Either<TokenModel, AppError>> => {
         const data = {
-            userId: account?.id,
+            accountId: account?.id,
             token: token,
             createdTime: new Date(Date.now())
         } as TokenModel;

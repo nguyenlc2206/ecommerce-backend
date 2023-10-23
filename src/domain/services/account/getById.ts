@@ -39,7 +39,7 @@ export class GetAccountByIdServiceImpl<Entity extends AccountRequest> implements
     // * get accoount from database
     private handleGetAccount = async (id?: string): Promise<Either<AccountModel | undefined, AppError>> => {
         const response = await this.accountRepo.getById(id);
-        if (!response) return failure(new AppError('Email is already!', 400));
+        if (!response) return failure(new AppError('Email is not already!', 400));
         return success(response);
     };
 }

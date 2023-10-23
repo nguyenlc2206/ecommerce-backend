@@ -1,3 +1,5 @@
+import { CategoryModel } from '@ecommerce-backend/src/domain/models/Category';
+
 /** @todo: define account model reponse */
 export class AccountModel {
     id?: string;
@@ -14,6 +16,7 @@ export class AccountModel {
     OTP?: string;
     OTPType?: string;
     isDeleted?: boolean;
+    categories?: CategoryModel[];
 
     fromAccountModel(account: AccountModel) {
         return {
@@ -50,7 +53,8 @@ export class AccountModel {
                 phoneNo: item?.phoneNo,
                 avatar: item?.avatar,
                 role: item?.role,
-                isDeleted: item?.isDeleted
+                isDeleted: item?.isDeleted,
+                categories: item?.categories
             } as AccountModel);
         });
         return accounts as AccountModel[];

@@ -30,7 +30,7 @@ export class ProtectedRoutesController {
 
         // * processing response
         req.account = response.data;
-        req.userId = response.data?.id;
+        req.accountId = response.data?.id;
         req.accessToken = response.data?.accessToken;
         req.password = response.data?.password;
         next();

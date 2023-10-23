@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 /** init OTP schema */
 const OTPSchema = new mongoose.Schema(
     {
-        userId: { type: mongoose.Schema.Types.ObjectId, ref: 'AccountEntity', required: true },
+        accountId: { type: mongoose.Schema.Types.ObjectId, ref: 'Account', required: true },
         OTP: { type: String },
         OTPCreatedTime: { type: Date },
         OTPAttempts: { type: Number, default: 0 },

@@ -13,8 +13,13 @@ export interface Validation {
 
 /** @todo: validation valid fields */
 export class ValidFieldsValidation implements Validation {
-    protected fieldsValidUpdate: Array<string> = ['fullName', 'phoneNo', 'avatar', 'email'];
-    constructor(private readonly arrayFields: Array<string>) {}
+    protected fieldsValidUpdate: Array<string>;
+    constructor(
+        private readonly arrayFields: Array<string>,
+        fieldsValidUpdate: Array<string>
+    ) {
+        this.fieldsValidUpdate = fieldsValidUpdate;
+    }
 
     containsAny(source: Array<string>, target: Array<string>) {
         let isFound = true;

@@ -24,9 +24,9 @@ export class TokenRepositoryImpl<T extends TokenModel> implements TokenRepositor
         await TokenEntity.findOneAndDelete({ token: token });
     }
 
-    /** overiding getByUserId method */
-    async getByUserId(id: string, token: string): Promise<T> {
-        const result = await TokenEntity.findOne({ userId: id, token: token });
+    /** overiding getByaccountId method */
+    async getByaccountId(id: string, token: string): Promise<T> {
+        const result = await TokenEntity.findOne({ accountId: id, token: token });
         return result as T;
     }
 }

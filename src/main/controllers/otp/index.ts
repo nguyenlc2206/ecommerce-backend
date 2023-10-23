@@ -1,9 +1,9 @@
 // * import libs
 import { Service } from 'typedi';
 import { NextFunction, Request, Response } from 'express';
-import { VerifyOTPController } from './verifyOTP.controller';
 
 // * import projects
+import { VerifyOTPController } from '@ecommerce-backend/src/main/controllers/otp/verifyOTP.controller';
 
 // ==============================||  OTP CONTROLLER ||============================== //
 @Service()

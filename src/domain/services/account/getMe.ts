@@ -28,7 +28,7 @@ export class GetAccountMeServiceImpl<Entity extends AccountRequest> implements G
     /** overiding execute method */
     async execute(entity: Entity): Promise<Either<AccountModel, AppError>> {
         /** get account by id */
-        const resultGet = await this.handleGetAccount(entity?.userId);
+        const resultGet = await this.handleGetAccount(entity?.accountId);
         if (resultGet.isFailure()) return failure(resultGet.error);
 
         const _init = new AccountModel();

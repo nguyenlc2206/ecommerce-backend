@@ -74,7 +74,7 @@ export class ChangePasswordServiceImpl<Entity extends AccountRequest> implements
         req?: AccountRequest,
         hashPassword?: string
     ): Promise<Either<AccountModel, AppError>> => {
-        const _id = req?.userId;
+        const _id = req?.accountId;
         const _itemUpdate = {
             password: hashPassword,
             passwordChangedAt: new Date(Date.now())

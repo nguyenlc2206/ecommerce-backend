@@ -13,6 +13,8 @@ import { OTPService } from '@ecommerce-backend/src/shared/common/otp';
 import { OTPController } from '@ecommerce-backend/src/main/controllers/otp';
 import { AccountController } from '@ecommerce-backend/src/main/controllers/account/index';
 import { AuthenticationController } from '@ecommerce-backend/src/main/controllers/authentication';
+import { CategoryController } from '@ecommerce-backend/src/main/controllers/category';
+import { ProductController } from '@ecommerce-backend/src/main/controllers/product';
 
 // * import services
 import { LoginServiceImpl } from '@ecommerce-backend/src/domain/services/authentication/login';
@@ -30,24 +32,37 @@ import { UpdateAccountServiceImpl } from '@ecommerce-backend/src/domain/services
 import { GetAccountByIdServiceImpl } from '@ecommerce-backend/src/domain/services/account/getById';
 import { LogoutServiceImpl } from '@ecommerce-backend/src/domain/services/authentication/logout';
 
+import { UpdateCategoryServiceImpl } from '@ecommerce-backend/src/domain/services/category/update';
+import { CategoryRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/category';
+import { DeleteCategoryServiceImpl } from '@ecommerce-backend/src/domain/services/category/delete';
+import { GetAllCategoryServiceImpl } from '@ecommerce-backend/src/domain/services/category/getAll';
+import { GetCategoryByIdServiceImpl } from '@ecommerce-backend/src/domain/services/category/getById';
+
 // * import repository
 import { AccountRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/account.impl';
 import { OTPRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/otp.impl';
 import { TokenRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/token.impl';
+import { ProductRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/products/product.impl';
+import { ProductSizeRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/products/size.impl';
 
 // ==============================||  INJECTTION INIT ||============================== //
 
 const InjectionInit = catchAsync(async () => {
+    /** @todo: define store, data */
     // * define store
     Container.set(Cloudinary, new Cloudinary());
     Container.set(Email, new Email());
     Container.set(OTPService, new OTPService());
 
+    /** @todo: define controller */
     // * define account controller
     Container.set(AccountController, new AccountController());
     Container.set(AuthenticationController, new AuthenticationController());
     Container.set(OTPController, new OTPController());
+    Container.set(CategoryController, new CategoryController());
+    Container.set(ProductController, new ProductController());
 
+    /** @todo: define services */
     // * define account services
     Container.set(UpdateAccountMeServiceImpl, new UpdateAccountMeServiceImpl());
     Container.set(GetAccountMeServiceImpl, new GetAccountMeServiceImpl());
@@ -69,10 +84,23 @@ const InjectionInit = catchAsync(async () => {
     Container.set(VerifyOTPServiceImpl, new VerifyOTPServiceImpl());
     Container.set(GenerateOTPServiceImpl, new GenerateOTPServiceImpl());
 
+    // * define category services
+    Container.set(CreateAccountServiceImpl, new CreateAccountServiceImpl());
+    Container.set(UpdateCategoryServiceImpl, new UpdateCategoryServiceImpl());
+    Container.set(DeleteCategoryServiceImpl, new DeleteCategoryServiceImpl());
+    Container.set(GetAllCategoryServiceImpl, new GetAllCategoryServiceImpl());
+    Container.set(GetCategoryByIdServiceImpl, new GetCategoryByIdServiceImpl());
+
+    /** @todo: define store, repository */
     // * define account repository
     Container.set(AccountRepositoryImpl, new AccountRepositoryImpl());
     Container.set(OTPRepositoryImpl, new OTPRepositoryImpl());
     Container.set(TokenRepositoryImpl, new TokenRepositoryImpl());
+    Container.set(CategoryRepositoryImpl, new CategoryRepositoryImpl());
+
+    // * products repositpry
+    Container.set(ProductRepositoryImpl, new ProductRepositoryImpl());
+    Container.set(ProductSizeRepositoryImpl, new ProductSizeRepositoryImpl());
 });
 
 export default InjectionInit;

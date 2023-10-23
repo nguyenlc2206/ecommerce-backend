@@ -39,7 +39,12 @@ export class AccountRepositoryImpl<T extends AccountModel> implements AccountRep
 
     /** overiding getAll method */
     async getAll(): Promise<T[]> {
-        const result = await AccountEntity.find({});
+        // const popObj = {
+        //     path: 'categories',
+        //     select: 'name'
+        // };
+        // const result = await AccountEntity.find().populate(popObj);
+        const result = await AccountEntity.find();
         return result as T[];
     }
 

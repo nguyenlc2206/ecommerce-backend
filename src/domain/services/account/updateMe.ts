@@ -43,7 +43,7 @@ export class UpdateAccountMeServiceImpl<Entity extends AccountRequest> implement
 
         /** handle update data */
         _.omit(entity?.body, ['avatar']);
-        const reponse = await this.accountRepo.update(entity?.userId, {
+        const reponse = await this.accountRepo.update(entity?.accountId, {
             ...entity?.body,
             ..._entity
         });

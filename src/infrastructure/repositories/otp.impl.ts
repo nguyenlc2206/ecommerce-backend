@@ -5,6 +5,7 @@ import { Service } from 'typedi';
 import OTPEntity from '@ecommerce-backend/src/infrastructure/schema/OTP';
 import { OTPModel } from '@ecommerce-backend/src/domain/models/OTP';
 import { OTPRepository } from '@ecommerce-backend/src/domain/repositories/otp';
+
 // ==============================||  OTP REPOSITORY IMPLEMENT ||============================== //
 
 @Service()
@@ -18,9 +19,9 @@ export class OTPRepositoryImpl<T extends OTPModel> implements OTPRepository<T> {
         return result as T;
     }
 
-    /** overding getByUserId method */
-    async getByUserId(entity: T): Promise<T> {
-        const result = await OTPEntity.findOne({ userId: entity?.userId, OTPType: entity?.OTPType });
+    /** overding getByaccountId method */
+    async getByaccountId(entity: T): Promise<T> {
+        const result = await OTPEntity.findOne({ accountId: entity?.accountId, OTPType: entity?.OTPType });
         return result as T;
     }
 

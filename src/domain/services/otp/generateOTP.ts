@@ -47,7 +47,7 @@ export class GenerateOTPServiceImpl<Entity extends AccountModel> implements Gene
         if (resultGet.isFailure()) return failure(resultGet.error);
         const { data: account } = resultGet;
 
-        // * get OTP by userId and typeOTP
+        // * get OTP by accountId and typeOTP
         const resultGetOTP = await this.handleGetOTPInfo(account?.id, 'OTPForgotPassword');
         if (resultGetOTP.isFailure()) return failure(resultGetOTP.error);
         const { data: OTPInfo } = resultGetOTP;
@@ -90,10 +90,10 @@ export class GenerateOTPServiceImpl<Entity extends AccountModel> implements Gene
         return success(response);
     };
 
-    /** @todo: get OTP by userId and typeOTP */
-    private handleGetOTPInfo = async (userId?: string, OTPType?: string): Promise<Either<OTPModel, AppError>> => {
-        const crities = { userId: userId, OTPType: OTPType } as OTPModel;
-        const res = await this.OTPRepo.getByUserId(crities);
+    /** @todo: get OTP by accountId and typeOTP */
+    private handleGetOTPInfo = async (accountId?: string, OTPType?: string): Promise<Either<OTPModel, AppError>> => {
+        const crities = { accountId: accountId, OTPType: OTPType } as OTPModel;
+        const res = await this.OTPRepo.getByaccountId(crities);
 
         // If account OTP is blocked, return an error
         if (res?.isBlocked && res?.blockUntil) {
@@ -135,7 +135,7 @@ export class GenerateOTPServiceImpl<Entity extends AccountModel> implements Gene
     /** handle save OTP to database */
     private handleSaveOTP = async (entity?: AccountModel, OTP?: string): Promise<Either<OTPModel, AppError>> => {
         const data = {
-            userId: entity?.id,
+            accountId: entity?.id,
             OTP: OTP,
             OTPCreatedTime: new Date(Date.now()),
             OTPType: 'OTPForgotPassword'
