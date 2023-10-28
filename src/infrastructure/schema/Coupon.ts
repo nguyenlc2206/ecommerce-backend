@@ -1,25 +1,19 @@
-// * import lib
+// * import libs
 import mongoose from 'mongoose';
 
-/** init product schema */
-const ProductSizeSchema = new mongoose.Schema(
+/** init account entity schema */
+const CouponSchema = new mongoose.Schema(
     {
-        productId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Product',
-            required: true
-        },
-        size: {
+        code: {
             type: String,
-            enum: ['S', 'M', 'L', 'XL', 'XXL'],
             required: true
         },
-        price: {
-            type: Number,
+        startDate: {
+            type: Date,
             required: true
         },
-        totalQty: {
-            type: Number,
+        endDate: {
+            type: Date,
             required: true
         },
         discount: {
@@ -27,10 +21,14 @@ const ProductSizeSchema = new mongoose.Schema(
             required: true,
             default: 0
         },
-        totalSold: {
-            type: Number,
-            required: true,
-            default: 0
+        accountId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Account'
+        },
+        type: {
+            type: String,
+            enum: ['personal', 'all'],
+            default: 'all'
         },
         isDeleted: {
             type: Boolean,
@@ -50,6 +48,6 @@ const ProductSizeSchema = new mongoose.Schema(
 );
 
 // * compile the schema to model
-const ProductSizeEntity = mongoose.model('ProductSize', ProductSizeSchema);
+const CouponEntity = mongoose.model('Coupon', CouponSchema);
 
-export default ProductSizeEntity;
+export default CouponEntity;

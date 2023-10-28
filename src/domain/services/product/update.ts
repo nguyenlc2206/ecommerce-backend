@@ -14,6 +14,7 @@ import { ProductRepositoryImpl } from '@ecommerce-backend/src/infrastructure/rep
 import { Cloudinary } from '@ecommerce-backend/src/shared/common/cloudinary';
 import { CloudinaryMethods } from '@ecommerce-backend/src/shared/methods/cloudinary';
 import { ProductSizeModel } from '@ecommerce-backend/src/domain/models/products/Size';
+import { ProductSizeRepository } from '@ecommerce-backend/src/domain/repositories/products/size';
 
 // ==============================||  UPDATE PRODUCT SERVICES IMPLEMENT ||============================== //
 
@@ -26,7 +27,7 @@ export class UpdateProductServiceImpl<Entity extends AccountRequest> implements 
     /** init services */
     protected cloudinary: CloudinaryMethods<KeyedObject>;
     protected productRepo: ProductRepository<ProductModel>;
-    protected productSizeRepo: ProductSizeRepositoryImpl<ProductSizeModel>;
+    protected productSizeRepo: ProductSizeRepository<ProductSizeModel>;
 
     constructor() {
         this.cloudinary = Container.get(Cloudinary);

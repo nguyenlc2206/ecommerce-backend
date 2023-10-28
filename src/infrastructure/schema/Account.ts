@@ -49,6 +49,20 @@ const AccountSchema = new mongoose.Schema(
         deletedAt: {
             type: Date,
             default: null
+        },
+        shippingAddress: {
+            name: {
+                type: String
+            },
+            address: {
+                type: String
+            },
+            city: {
+                type: String
+            },
+            province: {
+                type: String
+            }
         }
     },
     {
@@ -68,6 +82,20 @@ AccountSchema.virtual('AccountCategories', {
 /** define relation one to many product */
 AccountSchema.virtual('AccountProducts', {
     ref: 'Product', //The Model to use
+    localField: '_id', //Find in Model, where localField
+    foreignField: 'accountId' // is equal to foreignField
+});
+
+/** define relation one to many order */
+AccountSchema.virtual('AccountOrder', {
+    ref: 'Order', //The Model to use
+    localField: '_id', //Find in Model, where localField
+    foreignField: 'accountId' // is equal to foreignField
+});
+
+/** define relation one to many coupon */
+AccountSchema.virtual('AccountCoupon', {
+    ref: 'Coupon', //The Model to use
     localField: '_id', //Find in Model, where localField
     foreignField: 'accountId' // is equal to foreignField
 });

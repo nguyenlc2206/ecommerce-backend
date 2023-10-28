@@ -1,4 +1,5 @@
 import { CategoryModel } from '@ecommerce-backend/src/domain/models/Category';
+import { KeyedObject } from '@ecommerce-backend/src/shared/types';
 
 /** @todo: define account model reponse */
 export class AccountModel {
@@ -17,6 +18,7 @@ export class AccountModel {
     OTPType?: string;
     isDeleted?: boolean;
     categories?: CategoryModel[];
+    shippingAddress?: KeyedObject;
 
     fromAccountModel(account: AccountModel) {
         return {

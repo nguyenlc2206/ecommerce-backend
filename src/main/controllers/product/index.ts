@@ -9,6 +9,8 @@ import { DeleteProductController } from '@ecommerce-backend/src/main/controllers
 import { GetProductByIdController } from '@ecommerce-backend/src/main/controllers/product/getById.controller';
 import { GetAllProductController } from '@ecommerce-backend/src/main/controllers/product/getAll.controller';
 import { GetProductByIdAndSizeController } from '@ecommerce-backend/src/main/controllers/product/getByIdAndSize';
+import { GetAllSizeProductController } from '@ecommerce-backend/src/main/controllers/product/getAllSize.controller';
+import { CreateProductSizeController } from '@ecommerce-backend/src/main/controllers/product/createSize.controller';
 
 // ==============================||  PRODUCT CONTROLLER ||============================== //
 @Service()
@@ -49,6 +51,18 @@ export class ProductController {
     // * getByIdAndSize
     getByIdAndSize = async (req: Request, res: Response, next: NextFunction) => {
         const _init = new GetProductByIdAndSizeController();
+        return _init.execute(req, res, next);
+    };
+
+    // * getAll products size
+    getAllSize = async (req: Request, res: Response, next: NextFunction) => {
+        const _init = new GetAllSizeProductController();
+        return _init.execute(req, res, next);
+    };
+
+    // * create size
+    createSize = async (req: Request, res: Response, next: NextFunction) => {
+        const _init = new CreateProductSizeController();
         return _init.execute(req, res, next);
     };
 }

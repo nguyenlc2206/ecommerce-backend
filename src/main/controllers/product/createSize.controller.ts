@@ -5,21 +5,24 @@ import { NextFunction, Request, Response } from 'express';
 
 // * import projects
 import catchAsync from '@ecommerce-backend/src/shared/common/catchAsync';
-import { ValidationCreateProduct } from '@ecommerce-backend/src/main/controllers/validations/product/create';
-import { CreateProductService, CreateProductServiceImpl } from '@ecommerce-backend/src/domain/services/product/create';
 import { AccountRequest } from '@ecommerce-backend/src/shared/types';
+import { ValidationCreateProductSize } from '@ecommerce-backend/src/main/controllers/validations/product/createSize';
+import {
+    CreateProductSizeService,
+    CreateProductSizeServiceImpl
+} from '@ecommerce-backend/src/domain/services/product/createSize';
 
-// ==============================||  CREATE PRODUCT CONTROLLER ||============================== //
+// ==============================||  CREATE PRODUCT SIZE CONTROLLER ||============================== //
 
 @Service()
-export class CreateProductController {
+export class CreateProductSizeController {
     /** init validation */
-    protected validation = new ValidationCreateProduct();
-    protected createProductService: CreateProductService<AccountRequest>;
+    protected validation = new ValidationCreateProductSize();
+    protected createProductService: CreateProductSizeService<AccountRequest>;
 
     // * constructor
     constructor() {
-        this.createProductService = Container.get(CreateProductServiceImpl);
+        this.createProductService = Container.get(CreateProductSizeServiceImpl);
     }
 
     /** execute method */
@@ -37,7 +40,7 @@ export class CreateProductController {
             status: 'success',
             EC: 200,
             EM: '',
-            MS: 'Insert product to database success',
+            MS: 'Insert product size to database success',
             DT: { data: response.data }
         });
     });

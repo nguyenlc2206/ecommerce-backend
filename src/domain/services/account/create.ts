@@ -55,7 +55,7 @@ export class CreateAccountServiceImpl<Entity extends AccountModel> implements Cr
         } else {
             __entity = {
                 ..._entity,
-                avatar: 'https://res.cloudinary.com/dybi8swhy/image/upload/v1697470507/AvatarImages/avatar-default.png'
+                avatar: 'https://res.cloudinary.com/dybi8swhy/image/upload/v1698151700/ImagesCommon/image-account-default.png'
             };
         }
 

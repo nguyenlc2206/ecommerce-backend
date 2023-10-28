@@ -17,9 +17,6 @@ export class ProductModel {
     category?: CategoryModel;
 
     fromProductModel(productModel: KeyedObject) {
-        if (productModel?.isDeleted) {
-            return {} as ProductModel;
-        }
         const _init = new CategoryModel();
         return {
             id: productModel?.id,
@@ -40,7 +37,8 @@ export class ProductModel {
                     id: item?.id,
                     name: item?.name,
                     description: item?.description,
-                    sizes: item?.images,
+                    sizes: item?.sizes,
+                    images: item?.images,
                     category: _init.fromCategoryModelCreate(item?.categoryId),
                     isDeleted: item?.isDeleted
                 } as ProductModel);

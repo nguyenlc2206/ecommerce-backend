@@ -25,8 +25,7 @@ export class ExpressConfig {
     /** define function init */
     public init = catchAsync(async (): Promise<void> => {
         /** json pareser */
-        this.app.use(express.json());
-
+        this.app.use(express.json({ limit: '50mb' }));
         /** cors config */
         ExpressCors(this.app);
 

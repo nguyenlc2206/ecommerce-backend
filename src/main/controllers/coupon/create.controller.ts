@@ -5,35 +5,31 @@ import { NextFunction, Request, Response } from 'express';
 
 // * import projects
 import catchAsync from '@ecommerce-backend/src/shared/common/catchAsync';
-import {
-    CreateCategoryService,
-    CreateCategoryServiceImpl
-} from '@ecommerce-backend/src/domain/services/category/create';
-import { Validation } from '@ecommerce-backend/src/shared/common/validations';
-import { ValidationCreateCategory } from '@ecommerce-backend/src/main/controllers/validations/category/create';
+import { ValidationCreateCoupon } from '@ecommerce-backend/src/main/controllers/validations/coupon/create';
 import { AccountRequest } from '@ecommerce-backend/src/shared/types';
+import { CreateCouponService, CreateCouponServiceImpl } from '@ecommerce-backend/src/domain/services/coupon/create';
 
-// ==============================||  CREATE CATEGORY CONTROLLER ||============================== //
+// ==============================||  CREATE COUPON CONTROLLER ||============================== //
 
 @Service()
-export class CreateCategoryController {
+export class CreateCouponController {
     /** init services */
-    protected createCategoryService: CreateCategoryService<AccountRequest>;
-    protected validations: Validation = new ValidationCreateCategory();
+    protected validation = new ValidationCreateCoupon();
+    protected createCouponService: CreateCouponService<AccountRequest>;
 
     /** constructor */
     constructor() {
-        this.createCategoryService = Container.get(CreateCategoryServiceImpl);
+        this.createCouponService = Container.get(CreateCouponServiceImpl);
     }
 
     /** overding execute function */
     execute = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
         /** validation */
-        const validation = this.validations.execute(req);
+        const validation = this.validation.execute(req);
         if (validation) return next(validation);
 
         /** execute create category */
-        const response = await this.createCategoryService.execute(req);
+        const response = await this.createCouponService.execute(req);
         if (response.isFailure()) return next(response.error);
 
         // * processing response
@@ -41,7 +37,7 @@ export class CreateCategoryController {
             status: 'success',
             EC: 200,
             EM: '',
-            MS: 'Insert category to database success',
+            MS: 'Insert coupon to database success',
             DT: { data: response.data }
         });
     });

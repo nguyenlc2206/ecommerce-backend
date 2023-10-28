@@ -26,15 +26,13 @@ export class CategoryModel {
     fromCategoryModelGetAll(category: CategoryModel[]) {
         let categories: CategoryModel[] = [];
         category?.map((item: CategoryModel) => {
-            if (!item?.isDeleted) {
-                categories.push({
-                    id: item?.id,
-                    name: item?.name,
-                    image: item?.image,
-                    accountId: item?.accountId,
-                    isDeleted: item?.isDeleted
-                } as CategoryModel);
-            }
+            categories.push({
+                id: item?.id,
+                name: item?.name,
+                image: item?.image,
+                accountId: item?.accountId,
+                isDeleted: item?.isDeleted
+            } as CategoryModel);
         });
 
         return categories;

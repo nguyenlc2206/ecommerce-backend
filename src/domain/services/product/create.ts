@@ -17,6 +17,8 @@ import { ProductSizeRepositoryImpl } from '@ecommerce-backend/src/infrastructure
 import { ProductSizeModel } from '@ecommerce-backend/src/domain/models/products/Size';
 import { CategoryRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/category';
 import { CategoryModel } from '@ecommerce-backend/src/domain/models/Category';
+import { ProductSizeRepository } from '@ecommerce-backend/src/domain/repositories/products/size';
+import { CategoryRepository } from '@ecommerce-backend/src/domain/repositories/category';
 
 // ==============================||  CREATE PRODUCT SERVICES IMPLEMENT ||============================== //
 
@@ -29,8 +31,8 @@ export class CreateProductServiceImpl<Entity extends AccountRequest> implements 
     /** init repo, store */
     protected cloudinary: CloudinaryMethods<KeyedObject>;
     protected productRepo: ProductRepository<ProductModel>;
-    protected productSizeRepo: ProductSizeRepositoryImpl<ProductSizeModel>;
-    protected categoryRepo: CategoryRepositoryImpl<CategoryModel>;
+    protected productSizeRepo: ProductSizeRepository<ProductSizeModel>;
+    protected categoryRepo: CategoryRepository<CategoryModel>;
 
     /** constructor */
     constructor() {
@@ -78,7 +80,9 @@ export class CreateProductServiceImpl<Entity extends AccountRequest> implements 
         entity?.body?.sizes.map((item: any) => sizes.push(item?.size));
 
         /** handle save product */
-        const dataCreate = { ...entity?.body, sizes: sizes, images: images.data, accountId: entity?.account?.id };
+        // const dataCreate = { ...entity?.body, sizes: sizes, images: images.data, accountId: entity?.account?.id };
+        const dataCreate = { ...entity?.body, sizes: sizes, accountId: entity?.account?.id };
+
         const response = await this.productRepo.create(dataCreate);
         const _init = new ProductModel();
         const result = _init.fromProductModel(response);

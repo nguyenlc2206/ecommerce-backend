@@ -38,4 +38,28 @@ export class ProductSizeRepositoryImpl<T extends ProductSizeModel> implements Pr
         const result = await ProductSizeEntity.find({ productId: id, size: size }).populate(popObj);
         return result as unknown as T[];
     }
+
+    /** overiding update method */
+    async update(id: string, entity: T): Promise<any> {
+        let session = await ProductSizeEntity.startSession();
+        session.startTransaction();
+        const result = await ProductSizeEntity.findByIdAndUpdate(id, entity);
+        session.commitTransaction();
+        session.endSession();
+        return result;
+    }
+
+    /** overiding getByProductId method */
+    async getByProductId(id: string): Promise<T[]> {
+        const popObj = {
+            path: 'productId',
+            select: 'name id description images',
+            populate: {
+                path: 'categoryId',
+                select: 'name id'
+            }
+        };
+        const result = await ProductSizeEntity.find({ productId: id }).populate(popObj);
+        return result as T[];
+    }
 }

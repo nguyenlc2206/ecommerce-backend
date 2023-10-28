@@ -5,21 +5,21 @@ import { NextFunction, Request, Response } from 'express';
 
 // * import projects
 import catchAsync from '@ecommerce-backend/src/shared/common/catchAsync';
-import { ValidationCreateProduct } from '@ecommerce-backend/src/main/controllers/validations/product/create';
-import { CreateProductService, CreateProductServiceImpl } from '@ecommerce-backend/src/domain/services/product/create';
+import { CreateOrderService, CreateOrderServiceImpl } from '@ecommerce-backend/src/domain/services/order/create';
 import { AccountRequest } from '@ecommerce-backend/src/shared/types';
+import { ValidationCreateOrder } from '@ecommerce-backend/src/main/controllers/validations/order/create';
 
-// ==============================||  CREATE PRODUCT CONTROLLER ||============================== //
+// ==============================||  CREATE ORDER CONTROLLER ||============================== //
 
 @Service()
-export class CreateProductController {
+export class CreateOrderController {
     /** init validation */
-    protected validation = new ValidationCreateProduct();
-    protected createProductService: CreateProductService<AccountRequest>;
+    protected validation = new ValidationCreateOrder();
+    protected createOrderService: CreateOrderService<AccountRequest>;
 
     // * constructor
     constructor() {
-        this.createProductService = Container.get(CreateProductServiceImpl);
+        this.createOrderService = Container.get(CreateOrderServiceImpl);
     }
 
     /** execute method */
@@ -28,8 +28,8 @@ export class CreateProductController {
         const validation = this.validation.execute(req);
         if (validation) return next(validation);
 
-        // * execute create product services
-        const response = await this.createProductService.execute(req);
+        //* execute service
+        const response = await this.createOrderService.execute(req);
         if (response.isFailure()) return next(response.error);
 
         // * processing response
@@ -37,7 +37,7 @@ export class CreateProductController {
             status: 'success',
             EC: 200,
             EM: '',
-            MS: 'Insert product to database success',
+            MS: 'Insert order to database success',
             DT: { data: response.data }
         });
     });

@@ -15,6 +15,8 @@ import { AccountController } from '@ecommerce-backend/src/main/controllers/accou
 import { AuthenticationController } from '@ecommerce-backend/src/main/controllers/authentication';
 import { CategoryController } from '@ecommerce-backend/src/main/controllers/category';
 import { ProductController } from '@ecommerce-backend/src/main/controllers/product';
+import { OrderController } from '@ecommerce-backend/src/main/controllers/order';
+import { CouponController } from '@ecommerce-backend/src/main/controllers/coupon';
 
 // * import services
 import { LoginServiceImpl } from '@ecommerce-backend/src/domain/services/authentication/login';
@@ -44,6 +46,16 @@ import { DeleteProductServiceImpl } from '@ecommerce-backend/src/domain/services
 import { GetProductByIdServiceImpl } from '@ecommerce-backend/src/domain/services/product/getById';
 import { GetAllProductServiceImpl } from '@ecommerce-backend/src/domain/services/product/getAll';
 import { GetProductByIdAndSizeServiceImpl } from '@ecommerce-backend/src/domain/services/product/getByIdAndSize';
+import { CreateOrderServiceImpl } from '@ecommerce-backend/src/domain/services/order/create';
+import { DeleteOrderServiceImpl } from '@ecommerce-backend/src/domain/services/order/delete';
+import { GetAllOrderServiceImpl } from '@ecommerce-backend/src/domain/services/order/getAll';
+import { GetOrderByIdServiceImpl } from '@ecommerce-backend/src/domain/services/order/getById';
+import { CreateCouponServiceImpl } from '@ecommerce-backend/src/domain/services/coupon/create';
+import { DiscountServiceImpl } from '@ecommerce-backend/src/domain/services/coupon/discount';
+import { GetAllCouponServiceImpl } from '@ecommerce-backend/src/domain/services/coupon/getAll';
+import { DeleteCouponServiceImpl } from '@ecommerce-backend/src/domain/services/coupon/delete';
+import { GetPaginateOrderServiceImpl } from '@ecommerce-backend/src/domain/services/order/getPaginate';
+import { GetAllProductSizeServiceImpl } from '@ecommerce-backend/src/domain/services/product/getAllSize';
 
 // * import repository
 import { AccountRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/account.impl';
@@ -51,6 +63,10 @@ import { OTPRepositoryImpl } from '@ecommerce-backend/src/infrastructure/reposit
 import { TokenRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/token.impl';
 import { ProductRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/products/product.impl';
 import { ProductSizeRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/products/size.impl';
+import { OrderRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/order';
+import { UpdateOrderServiceImpl } from '@ecommerce-backend/src/domain/services/order/update';
+import { CouponRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/coupon.impl';
+import { CreateProductSizeServiceImpl } from '@ecommerce-backend/src/domain/services/product/createSize';
 
 // ==============================||  INJECTTION INIT ||============================== //
 
@@ -68,6 +84,8 @@ const InjectionInit = catchAsync(async () => {
     Container.set(OTPController, new OTPController());
     Container.set(CategoryController, new CategoryController());
     Container.set(ProductController, new ProductController());
+    Container.set(OrderController, new OrderController());
+    Container.set(CouponController, new CouponController());
 
     /** @todo: define services */
     // * define account services
@@ -105,6 +123,22 @@ const InjectionInit = catchAsync(async () => {
     Container.set(GetProductByIdServiceImpl, new GetProductByIdServiceImpl());
     Container.set(GetAllProductServiceImpl, new GetAllProductServiceImpl());
     Container.set(GetProductByIdAndSizeServiceImpl, new GetProductByIdAndSizeServiceImpl());
+    Container.set(GetAllProductSizeServiceImpl, new GetAllProductSizeServiceImpl());
+    Container.set(CreateProductSizeServiceImpl, new CreateProductSizeServiceImpl());
+
+    // * define order services
+    Container.set(CreateOrderServiceImpl, new CreateOrderServiceImpl());
+    Container.set(DeleteOrderServiceImpl, new DeleteOrderServiceImpl());
+    Container.set(GetAllOrderServiceImpl, new GetAllOrderServiceImpl());
+    Container.set(GetOrderByIdServiceImpl, new GetOrderByIdServiceImpl());
+    Container.set(UpdateOrderServiceImpl, new UpdateOrderServiceImpl());
+    Container.set(GetPaginateOrderServiceImpl, new GetPaginateOrderServiceImpl());
+
+    // * define coupon services
+    Container.set(CreateCouponServiceImpl, new CreateCouponServiceImpl());
+    Container.set(DiscountServiceImpl, new DiscountServiceImpl());
+    Container.set(GetAllCouponServiceImpl, new GetAllCouponServiceImpl());
+    Container.set(DeleteCouponServiceImpl, new DeleteCouponServiceImpl());
 
     /** @todo: define store, repository */
     // * define account repository
@@ -112,8 +146,10 @@ const InjectionInit = catchAsync(async () => {
     Container.set(OTPRepositoryImpl, new OTPRepositoryImpl());
     Container.set(TokenRepositoryImpl, new TokenRepositoryImpl());
     Container.set(CategoryRepositoryImpl, new CategoryRepositoryImpl());
+    Container.set(OrderRepositoryImpl, new OrderRepositoryImpl());
+    Container.set(CouponRepositoryImpl, new CouponRepositoryImpl());
 
-    // * products repositpry
+    // * products repository
     Container.set(ProductRepositoryImpl, new ProductRepositoryImpl());
     Container.set(ProductSizeRepositoryImpl, new ProductSizeRepositoryImpl());
 });

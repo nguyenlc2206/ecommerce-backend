@@ -5,6 +5,7 @@ import { ProductModel } from '@ecommerce-backend/src/domain/models/products/Prod
 export class ProductSizeModel {
     id?: string;
     productId?: string;
+    name?: string;
     size?: string;
     price?: number;
     totalQty?: number;
@@ -13,11 +14,13 @@ export class ProductSizeModel {
     createdAt?: Date;
     updatedAt?: Date;
     product?: ProductModel;
+    qty?: number;
+    description?: string;
 
     fromProductModel(productModel: KeyedObject) {
-        if (productModel?.isDeleted) {
-            return {} as ProductSizeModel;
-        }
+        // if (productModel?.isDeleted) {
+        //     return {} as ProductSizeModel;
+        // }
         return {
             id: productModel?.id,
             size: productModel?.size,
@@ -32,17 +35,15 @@ export class ProductSizeModel {
         let products: ProductSizeModel[] = [];
         const _init = new ProductModel();
         productModel?.map((item: KeyedObject) => {
-            if (!item?.isDeleted) {
-                products.push({
-                    id: item?.id,
-                    size: item?.size,
-                    price: item?.price,
-                    totalQty: item?.totalQty,
-                    totalSold: item?.totalSold,
-                    product: _init.fromProductModel(item?.productId),
-                    isDeleted: item?.isDeleted
-                } as ProductSizeModel);
-            }
+            products.push({
+                id: item?.id,
+                size: item?.size,
+                price: item?.price,
+                totalQty: item?.totalQty,
+                totalSold: item?.totalSold,
+                product: _init.fromProductModel(item?.productId),
+                isDeleted: item?.isDeleted
+            } as ProductSizeModel);
         });
         return products;
     }
