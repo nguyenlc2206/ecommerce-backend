@@ -19,6 +19,7 @@ export class AccountModel {
     isDeleted?: boolean;
     categories?: CategoryModel[];
     shippingAddress?: KeyedObject;
+    file?: Express.Multer.File;
 
     fromAccountModel(account: AccountModel) {
         return {

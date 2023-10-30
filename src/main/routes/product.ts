@@ -6,6 +6,7 @@ import { Container } from 'typedi';
 import { ProductController } from '@ecommerce-backend/src/main/controllers/product';
 import { AuthenticationController } from '@ecommerce-backend/src/main/controllers/authentication';
 import middlewareRoleRestrictTo from '@ecommerce-backend/src/shared/common/middleware';
+import uploadFile from '@ecommerce-backend/src/shared/common/uploadFile';
 
 /** init controller */
 const instanceProduct = Container.get(ProductController);
@@ -14,7 +15,13 @@ const instanceAuth = Container.get(AuthenticationController);
 /** @todo: init routes */
 export const ProductRoutes = (router: Router) => {
     /** create method */
-    router.post('/product', instanceAuth.protect, middlewareRoleRestrictTo(['admin']), instanceProduct.create);
+    router.post(
+        '/product',
+        uploadFile.array('images'),
+        instanceAuth.protect,
+        middlewareRoleRestrictTo(['admin']),
+        instanceProduct.create
+    );
     /** create size method */
     router.post('/product/size', instanceAuth.protect, middlewareRoleRestrictTo(['admin']), instanceProduct.createSize);
     /** update method */

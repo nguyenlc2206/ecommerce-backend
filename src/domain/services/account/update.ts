@@ -2,6 +2,7 @@
 import 'reflect-metadata';
 import { Container, Service } from 'typedi';
 import * as _ from 'lodash';
+import fs from 'fs';
 
 // * import projects
 import AppError from '@ecommerce-backend/src/shared/common/appError';
@@ -41,7 +42,7 @@ export class UpdateAccountServiceImpl<Entity extends AccountRequest> implements 
 
         /** handle update avatar */
         let _entity = {} as AccountModel;
-        if (entity?.body?.avatar) {
+        if (entity?.file) {
             const resultAvatar = await this.handleUpdateAvatar(entity, account);
             if (resultAvatar.isFailure()) return failure(resultAvatar.error);
             _entity = resultAvatar.data;
@@ -70,8 +71,9 @@ export class UpdateAccountServiceImpl<Entity extends AccountRequest> implements 
         entity?: AccountRequest,
         account?: AccountModel
     ): Promise<Either<AccountModel, AppError>> => {
+        let img = fs.readFileSync(entity?.file!?.path);
         const params: ParamsImageType = {
-            database64: entity?.body?.avatar,
+            database64: 'data:image/png;base64,' + img.toString('base64'),
             package: 'AvatarImages',
             publicId: account?.email === entity?.body?.email ? account?.email : entity?.body?.email
         };

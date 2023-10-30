@@ -29,12 +29,11 @@ export class CreateAccountController {
         if (validations) return next(validations);
 
         // * execute account services
-        const data: AccountModel = { ...req.body };
+        let data: AccountModel = { ...req.body, file: { ...req.file } };
         const result = await this.createAccountService.execute(data);
         if (result.isFailure()) return next(result.error);
 
         const { data: account } = result;
-
         // * processing response
         res.status(200).json({
             status: 'success',

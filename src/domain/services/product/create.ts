@@ -3,6 +3,7 @@ import 'reflect-metadata';
 import * as _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { Container, Service } from 'typedi';
+import fs from 'fs';
 
 // * import projects
 import { Either, failure, success } from '@ecommerce-backend/src/shared/common/either';
@@ -54,8 +55,10 @@ export class CreateProductServiceImpl<Entity extends AccountRequest> implements 
 
         /** handle save product size */
         const productSize: Array<ProductSizeModel> = [];
-        entity?.body?.sizes.map((item: ProductSizeModel) => {
-            productSize.push({ ...item, productId: result.data?.id } as ProductSizeModel);
+
+        entity?.body?.sizes.map((item: string) => {
+            const _item = JSON.parse(item);
+            productSize.push({ ..._item, productId: result.data?.id } as ProductSizeModel);
         });
         const resultSize = this.productSizeRepo.insertMary(productSize);
 
@@ -72,7 +75,8 @@ export class CreateProductServiceImpl<Entity extends AccountRequest> implements 
     /** @todo: save product */
     private hanleSaveProduct = async (entity: AccountRequest): Promise<Either<ProductModel, AppError>> => {
         /** handle get array link images */
-        const images = await this.handleGetLinkImage(entity?.body?.images);
+
+        const images = await this.handleGetLinkImage(entity?.files);
         if (images.isFailure()) return failure(images.error);
 
         /** processing sizes */
@@ -80,8 +84,8 @@ export class CreateProductServiceImpl<Entity extends AccountRequest> implements 
         entity?.body?.sizes.map((item: any) => sizes.push(item?.size));
 
         /** handle save product */
-        // const dataCreate = { ...entity?.body, sizes: sizes, images: images.data, accountId: entity?.account?.id };
-        const dataCreate = { ...entity?.body, sizes: sizes, accountId: entity?.account?.id };
+        const dataCreate = { ...entity?.body, sizes: sizes, images: images.data, accountId: entity?.account?.id };
+        // const dataCreate = { ...entity?.body, sizes: sizes, accountId: entity?.account?.id };
 
         const response = await this.productRepo.create(dataCreate);
         const _init = new ProductModel();
@@ -91,13 +95,14 @@ export class CreateProductServiceImpl<Entity extends AccountRequest> implements 
     };
 
     /** @todo: processing images */
-    private handleGetLinkImage = async (data: Array<string>): Promise<Either<Array<string>, AppError>> => {
+    private handleGetLinkImage = async (data?: KeyedObject): Promise<Either<Array<string>, AppError>> => {
         /** init  */
         const result: Array<string> = [];
         await Promise.all(
-            data.map(async (item: string) => {
+            data!.map(async (item: KeyedObject) => {
+                let img = fs.readFileSync(item.path);
                 const params: ParamsImageType = {
-                    database64: item,
+                    database64: 'data:image/png;base64,' + img.toString('base64'),
                     package: 'ProductImages',
                     publicId: uuidv4()
                 };

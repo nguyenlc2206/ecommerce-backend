@@ -6,15 +6,14 @@ import { NextFunction, Request, Response } from 'express';
 // * import projects
 import catchAsync from '@ecommerce-backend/src/shared/common/catchAsync';
 
-import { LoginService } from '@ecommerce-backend/src/domain/services/authentication/login';
 import { AccountRequest } from '@ecommerce-backend/src/shared/types';
-import { LogoutServiceImpl } from '@ecommerce-backend/src/domain/services/authentication/logout';
+import { LogoutService, LogoutServiceImpl } from '@ecommerce-backend/src/domain/services/authentication/logout';
 
 // ==============================||  LOGOUT CONTROLLER CONTROLLER ||============================== //
 
 @Service()
 export class LogoutController {
-    protected logoutService: LoginService<AccountRequest>;
+    protected logoutService: LogoutService<AccountRequest>;
 
     // * constructor
     constructor() {

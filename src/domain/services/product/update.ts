@@ -2,6 +2,7 @@
 import 'reflect-metadata';
 import { v4 as uuidv4 } from 'uuid';
 import { Container, Service } from 'typedi';
+import fs from 'fs';
 
 // * import projects
 import { Either, failure, success } from '@ecommerce-backend/src/shared/common/either';
@@ -43,9 +44,9 @@ export class UpdateProductServiceImpl<Entity extends AccountRequest> implements 
 
         /** handle processing image */
         let images: Array<string> = [];
-        if (entity?.body?.images) {
+        if (entity?.files) {
             /** handle get array link images */
-            const resultImages = await this.handleGetLinkImage(entity?.body?.images, resultGet.data);
+            const resultImages = await this.handleGetLinkImage(entity?.files, resultGet.data);
             if (resultImages.isFailure()) return failure(resultImages.error);
             images = resultImages.data;
         }
@@ -69,35 +70,24 @@ export class UpdateProductServiceImpl<Entity extends AccountRequest> implements 
     ): Promise<Either<Array<string>, AppError>> => {
         /** init  */
         const result: Array<string> = [];
-        await Promise.all(
-            data.map(async (item: any) => {
-                let params: ParamsImageType = {};
-                if (item?.id) {
-                    product.images?.map(async (url: string, index: number) => {
-                        const lastItem = url.split('/').pop();
-                        const publicId = lastItem?.split('.')[0];
 
-                        if (item?.id === publicId) {
-                            params = {
-                                database64: item?.data,
-                                package: 'ProductImages',
-                                publicId: item?.id
-                            };
-                            const response = await this.cloudinary.uploadImage(params);
-                            product.images![index] = response?.url;
-                        }
-                    });
-                } else {
-                    params = {
-                        database64: item?.data,
-                        package: 'ProductImages',
-                        publicId: uuidv4()
-                    };
-                    const response = await this.cloudinary.uploadImage(params);
-                    result.push(response?.url);
-                }
-            })
-        );
+        let params: ParamsImageType = {};
+        product.images?.map(async (url: string, index: number) => {
+            const lastItem = url.split('/').pop();
+            const publicId = lastItem?.split('.')[0];
+
+            if (data?.id === publicId) {
+                let img = fs.readFileSync(data?.file?.path);
+                params = {
+                    database64: 'data:image/png;base64,' + img.toString('base64'),
+                    package: 'ProductImages',
+                    publicId: data?.id
+                };
+                const response = await this.cloudinary.uploadImage(params);
+                product.images![index] = response?.url;
+            }
+        });
+
         return success([...product.images!, ...result]);
     };
 }

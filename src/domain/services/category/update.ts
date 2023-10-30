@@ -2,6 +2,7 @@
 import * as _ from 'lodash';
 import 'reflect-metadata';
 import { Container, Service } from 'typedi';
+import fs from 'fs';
 
 import { Either, failure, success } from '@ecommerce-backend/src/shared/common/either';
 import { CategoryModel } from '@ecommerce-backend/src/domain/models/Category';
@@ -39,7 +40,7 @@ export class UpdateCategoryServiceImpl<Entity extends AccountRequest> implements
 
         /** handle update image */
         let _entity = {} as CategoryModel;
-        if (entity?.body?.image) {
+        if (entity?.file) {
             const resultImage = await this.handleUpdateImage(entity, category);
             if (resultImage.isFailure()) return failure(resultImage.error);
             _entity = resultImage.data;
@@ -76,8 +77,9 @@ export class UpdateCategoryServiceImpl<Entity extends AccountRequest> implements
         entity?: AccountRequest,
         category?: CategoryModel
     ): Promise<Either<CategoryModel, AppError>> => {
+        let img = fs.readFileSync(entity?.file!?.path);
         const params: ParamsImageType = {
-            database64: entity?.body?.image,
+            database64: 'data:image/png;base64,' + img.toString('base64'),
             package: 'CategoryImages',
             publicId:
                 category?.name === entity?.body?.name.toLocaleLowerCase()

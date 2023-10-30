@@ -1,6 +1,8 @@
 // * import libs
+import fs from 'fs';
 import 'reflect-metadata';
 import { Container, Service } from 'typedi';
+import * as _ from 'lodash';
 
 // * import projects
 import AppError from '@ecommerce-backend/src/shared/common/appError';
@@ -41,14 +43,15 @@ export class CreateAccountServiceImpl<Entity extends AccountModel> implements Cr
         const _hashPassword = await this.handleHashPassword(entity?.password);
         const _entity = { ...entity, password: _hashPassword };
         let __entity = { ..._entity };
+
         /** handle cloudinary iamge */
-        if (entity?.avatar) {
+        if (entity.file) {
+            let img = fs.readFileSync(entity.file.path);
             const params: ParamsImageType = {
-                database64: entity?.avatar,
+                database64: 'data:image/png;base64,' + img.toString('base64'),
                 package: 'AvatarImages',
                 publicId: entity?.email
             };
-
             const resImage = await this.handleGetLinkImage(params);
             if (resImage.isFailure()) return failure(resImage.error);
             __entity = { ..._entity, avatar: resImage.data };
@@ -60,7 +63,7 @@ export class CreateAccountServiceImpl<Entity extends AccountModel> implements Cr
         }
 
         /** create account */
-        const response = await this.accountRepo.create(__entity);
+        const response = await this.accountRepo.create(_.omit(__entity, 'file'));
         const _init = new AccountModel();
         const result = _init.fromAccountModel(response);
 

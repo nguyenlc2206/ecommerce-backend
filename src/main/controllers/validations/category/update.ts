@@ -31,7 +31,7 @@ export class ValidationUpdateCategory {
         }
 
         /** @todo: Validate field valid **/
-        validations.push(new ValidFieldsValidation(fields, ['image', 'name']));
+        validations.push(new ValidFieldsValidation(fields, ['name']));
 
         /** @todo: init validationComposite **/
         const validationComposite = new ValidationComposite(validations);

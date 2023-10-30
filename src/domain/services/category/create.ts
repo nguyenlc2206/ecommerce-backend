@@ -1,6 +1,7 @@
 // * import libs
 import 'reflect-metadata';
 import { Container, Service } from 'typedi';
+import fs from 'fs';
 
 // * import projects
 import AppError from '@ecommerce-backend/src/shared/common/appError';
@@ -38,11 +39,13 @@ export class CreateCategoryServiceImpl<Entity extends AccountRequest> implements
         if (resultGet.isFailure()) return failure(resultGet.error);
 
         /** handle cloudinary iamge */
+        let img = fs.readFileSync(entity?.file!?.path);
         const params: ParamsImageType = {
-            database64: entity?.body?.image,
+            database64: 'data:image/png;base64,' + img.toString('base64'),
             package: 'CategoryImages',
             publicId: entity?.body?.name.toUpperCase()
         };
+
         const resImage = await this.handleGetLinkImage(params);
         if (resImage.isFailure()) return failure(resImage.error);
         const _entity = { ...entity };

@@ -26,29 +26,14 @@ export class ValidationCreateProduct {
             sizes: {
                 type: 'array',
                 items: {
-                    type: 'object',
-                    properties: {
-                        size: {
-                            type: 'string',
-                            isNotEmpty: true,
-                            errorMessage: { isNotEmpty: 'Missing field size!' }
-                        },
-                        price: {
-                            type: 'number',
-                            minimum: 0
-                        },
-                        totalQty: {
-                            type: 'number',
-                            minimum: 0
-                        }
-                    },
-                    required: ['size', 'price', 'totalQty']
+                    type: 'string',
+                    isNotEmpty: true,
+                    errorMessage: { isNotEmpty: 'Missing field items!' }
                 }
-            },
-            images: { type: 'array', minItems: 1, items: { type: 'string' } }
+            }
         },
-        required: ['name', 'description', 'categoryId', 'sizes', 'images'],
-        additionalProperties: false
+        required: ['name', 'description', 'categoryId', 'sizes'],
+        additionalProperties: true
     };
 
     constructor() {
