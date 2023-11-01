@@ -9,6 +9,7 @@ import ExpressRoutes from '@ecommerce-backend/src/main/config/routes';
 import AppError from '@ecommerce-backend/src/shared/common/appError';
 import controllerErrorConfig from '@ecommerce-backend/src/shared/common/controllerError';
 import InjectionInit from '@ecommerce-backend/src/main/config/injection';
+import StripeWebhook from './stripe';
 
 // ==============================||  EXPRESS CONFIG ||============================== //
 
@@ -24,10 +25,15 @@ export class ExpressConfig {
 
     /** define function init */
     public init = catchAsync(async (): Promise<void> => {
-        /** json pareser */
-        this.app.use(express.json({ limit: '50mb' }));
         /** cors config */
         ExpressCors(this.app);
+        /** Webhook config */
+        StripeWebhook(this.app);
+
+        /** json pareser */
+        this.app.use(express.json({ limit: '50mb' }));
+        //url encoded
+        this.app.use(express.urlencoded({ extended: true }));
 
         /** limiter request from same API */
         // const limiter = rateLimit({

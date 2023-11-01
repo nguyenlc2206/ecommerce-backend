@@ -30,6 +30,12 @@ const CouponSchema = new mongoose.Schema(
             enum: ['personal', 'all'],
             default: 'all'
         },
+        accountIdExpires: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Account'
+            }
+        ],
         isDeleted: {
             type: Boolean,
             required: true,

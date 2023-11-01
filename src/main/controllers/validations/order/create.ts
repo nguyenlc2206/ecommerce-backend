@@ -77,7 +77,8 @@ export class ValidationCreateOrder {
                 },
                 required: ['name', 'address']
             },
-            totalPrice: { type: 'number', minimum: 0 }
+            totalPrice: { type: 'number', minimum: 0 },
+            codes: { type: 'string' }
         },
         required: ['orderItems', 'shippingAddress', 'totalPrice'],
         additionalProperties: false

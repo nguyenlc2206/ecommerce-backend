@@ -14,6 +14,7 @@ export class CouponModel {
     createdAt?: Date;
     updatedAt?: Date;
     account?: AccountModel;
+    accountIdExpires?: Array<string>;
 
     fromCouponModel(couponModel: KeyedObject) {
         return {
@@ -30,6 +31,7 @@ export class CouponModel {
 
     fromCouponModelDiscount(couponModel: KeyedObject) {
         return {
+            id: couponModel?.id,
             discount: couponModel?.discount
         } as CouponModel;
     }

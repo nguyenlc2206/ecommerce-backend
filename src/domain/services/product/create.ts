@@ -1,9 +1,10 @@
 // * import libs
 import 'reflect-metadata';
 import * as _ from 'lodash';
+import fs from 'fs';
+
 import { v4 as uuidv4 } from 'uuid';
 import { Container, Service } from 'typedi';
-import fs from 'fs';
 
 // * import projects
 import { Either, failure, success } from '@ecommerce-backend/src/shared/common/either';
@@ -54,13 +55,7 @@ export class CreateProductServiceImpl<Entity extends AccountRequest> implements 
         if (result.isFailure()) return failure(result.error);
 
         /** handle save product size */
-        const productSize: Array<ProductSizeModel> = [];
-
-        entity?.body?.sizes.map((item: string) => {
-            const _item = JSON.parse(item);
-            productSize.push({ ..._item, productId: result.data?.id } as ProductSizeModel);
-        });
-        const resultSize = this.productSizeRepo.insertMary(productSize);
+        const resultSave = this.handleSaveProductSize(entity, result?.data?.id);
 
         return success(result.data);
     }
@@ -81,12 +76,13 @@ export class CreateProductServiceImpl<Entity extends AccountRequest> implements 
 
         /** processing sizes */
         const sizes: Array<string> = [];
-        entity?.body?.sizes.map((item: any) => sizes.push(item?.size));
-
+        entity?.body?.sizes.map((item: string) => {
+            const _item = JSON.parse(item);
+            sizes.push(_item?.size);
+        });
         /** handle save product */
         const dataCreate = { ...entity?.body, sizes: sizes, images: images.data, accountId: entity?.account?.id };
         // const dataCreate = { ...entity?.body, sizes: sizes, accountId: entity?.account?.id };
-
         const response = await this.productRepo.create(dataCreate);
         const _init = new ProductModel();
         const result = _init.fromProductModel(response);
@@ -111,5 +107,19 @@ export class CreateProductServiceImpl<Entity extends AccountRequest> implements 
             })
         );
         return success(result);
+    };
+
+    /** @todo: handle save product size */
+    private handleSaveProductSize = async (
+        entity: AccountRequest,
+        id?: string
+    ): Promise<Either<ProductSizeModel[], AppError>> => {
+        const productSize: Array<ProductSizeModel> = [];
+        entity?.body?.sizes.map((item: string) => {
+            const _item = JSON.parse(item);
+            productSize.push({ ..._item, productId: id } as ProductSizeModel);
+        });
+        const resultSize = await this.productSizeRepo.insertMary(productSize);
+        return success(resultSize);
     };
 }

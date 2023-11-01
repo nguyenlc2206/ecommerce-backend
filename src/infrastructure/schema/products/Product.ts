@@ -19,13 +19,11 @@ const ProductSchema = new mongoose.Schema(
         },
         sizes: {
             type: [String],
-            enum: ['S', 'M', 'L', 'XL', 'XXL'],
-            required: true
+            enum: ['S', 'M', 'L', 'XL', 'XXL']
         },
-        // colors: {
-        //     type: [String],
-        //     required: true
-        // },
+        colors: {
+            type: [String]
+        },
         accountId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Account',

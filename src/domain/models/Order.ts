@@ -9,7 +9,7 @@ export class OrderModel {
     orderNumber?: string;
     paymentStatus?: string;
     paymentMethod?: string;
-    totalPrice?: Number;
+    totalPrice?: any;
     currency?: string;
     status?: string;
     deliveredAt?: Date;

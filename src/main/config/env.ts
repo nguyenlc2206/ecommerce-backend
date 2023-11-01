@@ -21,7 +21,8 @@ const ENV = {
     emailPassword: env.EMAIL_PASSWORD || '',
     emailHost: env.EMAIL_HOST || undefined,
     emailPort: Number(env.EMAIL_PORT) || 0,
-    emailFrom: env.EMAIL_FROM || ''
+    emailFrom: env.EMAIL_FROM || '',
+    stripeSecretKey: env.STRIPE_SECRET_KEY || ''
 };
 
 export default ENV;

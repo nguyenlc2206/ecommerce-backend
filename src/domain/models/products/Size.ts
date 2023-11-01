@@ -16,6 +16,7 @@ export class ProductSizeModel {
     product?: ProductModel;
     qty?: number;
     description?: string;
+    color?: string;
 
     fromProductModel(productModel: KeyedObject) {
         // if (productModel?.isDeleted) {

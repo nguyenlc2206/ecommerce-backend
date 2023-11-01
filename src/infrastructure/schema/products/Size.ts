@@ -11,8 +11,10 @@ const ProductSizeSchema = new mongoose.Schema(
         },
         size: {
             type: String,
-            enum: ['S', 'M', 'L', 'XL', 'XXL'],
-            required: true
+            enum: ['S', 'M', 'L', 'XL', 'XXL']
+        },
+        color: {
+            type: String
         },
         price: {
             type: Number,

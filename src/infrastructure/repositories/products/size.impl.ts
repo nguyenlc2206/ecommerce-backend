@@ -26,7 +26,7 @@ export class ProductSizeRepositoryImpl<T extends ProductSizeModel> implements Pr
     }
 
     /** overiding getByProductIdAndSize method */
-    async getByProductIdAndSize(id: string, size: string): Promise<T[]> {
+    async getByProductIdAndSize(id: string, size: string, color: string): Promise<T[]> {
         const popObj = {
             path: 'productId',
             select: 'name id description images',
@@ -35,7 +35,7 @@ export class ProductSizeRepositoryImpl<T extends ProductSizeModel> implements Pr
                 select: 'name id'
             }
         };
-        const result = await ProductSizeEntity.find({ productId: id, size: size }).populate(popObj);
+        const result = await ProductSizeEntity.find({ productId: id, size: size, color: color }).populate(popObj);
         return result as unknown as T[];
     }
 

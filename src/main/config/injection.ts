@@ -67,6 +67,7 @@ import { OrderRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repos
 import { UpdateOrderServiceImpl } from '@ecommerce-backend/src/domain/services/order/update';
 import { CouponRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/coupon.impl';
 import { CreateProductSizeServiceImpl } from '@ecommerce-backend/src/domain/services/product/createSize';
+import { UpdateCouponServiceImpl } from '@ecommerce-backend/src/domain/services/coupon/update';
 
 // ==============================||  INJECTTION INIT ||============================== //
 
@@ -139,6 +140,7 @@ const InjectionInit = catchAsync(async () => {
     Container.set(DiscountServiceImpl, new DiscountServiceImpl());
     Container.set(GetAllCouponServiceImpl, new GetAllCouponServiceImpl());
     Container.set(DeleteCouponServiceImpl, new DeleteCouponServiceImpl());
+    Container.set(UpdateCouponServiceImpl, new UpdateCouponServiceImpl());
 
     /** @todo: define store, repository */
     // * define account repository
