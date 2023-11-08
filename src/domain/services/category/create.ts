@@ -56,7 +56,7 @@ export class CreateCategoryServiceImpl<Entity extends AccountRequest> implements
 
         /** proccessing data */
         const init = new CategoryModel();
-        const result = init.fromCategoryModelCreate(resultCreate.data);
+        const result = init.fromCategoryModel(resultCreate.data);
 
         return success(result);
     }

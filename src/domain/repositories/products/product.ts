@@ -5,4 +5,6 @@ export interface ProductRepository<T> {
     getById(id?: string): Promise<T>;
     delete(id?: string): Promise<void>;
     getAll(): Promise<T[]>;
+    getByCategoryId(id?: string): Promise<T[]>;
+    find(entity: T): Promise<T[]>;
 }

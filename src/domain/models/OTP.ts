@@ -4,6 +4,7 @@ import { KeyedObject } from '@ecommerce-backend/src/shared/types';
 export class OTPModel {
     id?: string;
     accountId?: string;
+    email?: string;
     OTP?: string;
     OTPCreatedTime?: Date;
     OTPAttempts?: number;
@@ -14,11 +15,12 @@ export class OTPModel {
     createdAt?: Date;
     updatedAt?: Date;
 
-    fromOTPModelToChangePassword(OTPModel: KeyedObject) {
+    fromOTPModelToChangePassword(OTPModel: KeyedObject, email: string) {
         return {
             OTPAttempts: OTPModel?.OTPAttempts,
             isBlocked: OTPModel?.isBlocked,
-            blockUntil: OTPModel?.blockUntil
+            blockUntil: OTPModel?.blockUntil,
+            email: email
         } as OTPModel;
     }
 }

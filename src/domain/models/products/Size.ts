@@ -8,6 +8,7 @@ export class ProductSizeModel {
     name?: string;
     size?: string;
     price?: number;
+    discount?: number;
     totalQty?: number;
     totalSold?: number;
     isDeleted?: boolean;
@@ -17,6 +18,8 @@ export class ProductSizeModel {
     qty?: number;
     description?: string;
     color?: string;
+    filter?: any;
+    populate?: any;
 
     fromProductModel(productModel: KeyedObject) {
         // if (productModel?.isDeleted) {
@@ -40,11 +43,33 @@ export class ProductSizeModel {
                 id: item?.id,
                 size: item?.size,
                 price: item?.price,
+                discount: item?.discount,
+                color: item?.color,
                 totalQty: item?.totalQty,
                 totalSold: item?.totalSold,
-                product: _init.fromProductModel(item?.productId),
                 isDeleted: item?.isDeleted
             } as ProductSizeModel);
+        });
+        return products;
+    }
+
+    fromProductModelFilter(productModel: KeyedObject) {
+        let products: ProductSizeModel[] = [];
+        const _init = new ProductModel();
+        productModel?.map((item: KeyedObject) => {
+            if (item?.productId?.categoryId) {
+                products.push({
+                    id: item?.id,
+                    size: item?.size,
+                    price: item?.price,
+                    discount: item?.discount,
+                    color: item?.color,
+                    totalQty: item?.totalQty,
+                    totalSold: item?.totalSold,
+                    product: _init.fromProductModel(item?.productId),
+                    isDeleted: item?.isDeleted
+                } as ProductSizeModel);
+            }
         });
         return products;
     }

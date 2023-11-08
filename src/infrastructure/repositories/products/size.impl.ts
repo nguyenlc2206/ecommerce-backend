@@ -62,4 +62,19 @@ export class ProductSizeRepositoryImpl<T extends ProductSizeModel> implements Pr
         const result = await ProductSizeEntity.find({ productId: id }).populate(popObj);
         return result as T[];
     }
+
+    /** overiding find method */
+    async find(entity: T): Promise<T[]> {
+        const popObj = {
+            path: 'productId',
+            select: 'name id description images',
+            populate: {
+                path: 'categoryId',
+                select: 'name id',
+                match: entity?.populate
+            }
+        };
+        const result = await ProductSizeEntity.find(entity?.filter).populate(popObj);
+        return result as T[];
+    }
 }

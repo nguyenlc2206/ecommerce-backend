@@ -32,7 +32,7 @@ export class GetCategoryByIdServiceImpl<Entity extends AccountRequest> implement
         if (resultGet.isFailure()) return failure(resultGet.error);
 
         const _init = new CategoryModel();
-        const result = _init.fromCategoryModelCreate(resultGet.data as CategoryModel);
+        const result = _init.fromCategoryModel(resultGet.data as CategoryModel);
         return success(result);
     }
 

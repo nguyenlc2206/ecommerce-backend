@@ -12,7 +12,7 @@ export class CategoryModel {
     deletedAt?: Date;
     products: Array<any>;
 
-    fromCategoryModelCreate(category: CategoryModel) {
+    fromCategoryModel(category: CategoryModel) {
         if (category?.isDeleted) {
             return {} as CategoryModel;
         }

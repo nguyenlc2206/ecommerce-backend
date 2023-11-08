@@ -17,6 +17,7 @@ import { CategoryController } from '@ecommerce-backend/src/main/controllers/cate
 import { ProductController } from '@ecommerce-backend/src/main/controllers/product';
 import { OrderController } from '@ecommerce-backend/src/main/controllers/order';
 import { CouponController } from '@ecommerce-backend/src/main/controllers/coupon';
+import { ProductCartController } from '@ecommerce-backend/src/main/controllers/cart';
 
 // * import services
 import { LoginServiceImpl } from '@ecommerce-backend/src/domain/services/authentication/login';
@@ -45,7 +46,6 @@ import { UpdateProductServiceImpl } from '@ecommerce-backend/src/domain/services
 import { DeleteProductServiceImpl } from '@ecommerce-backend/src/domain/services/product/delete';
 import { GetProductByIdServiceImpl } from '@ecommerce-backend/src/domain/services/product/getById';
 import { GetAllProductServiceImpl } from '@ecommerce-backend/src/domain/services/product/getAll';
-import { GetProductByIdAndSizeServiceImpl } from '@ecommerce-backend/src/domain/services/product/getByIdAndSize';
 import { CreateOrderServiceImpl } from '@ecommerce-backend/src/domain/services/order/create';
 import { DeleteOrderServiceImpl } from '@ecommerce-backend/src/domain/services/order/delete';
 import { GetAllOrderServiceImpl } from '@ecommerce-backend/src/domain/services/order/getAll';
@@ -68,6 +68,11 @@ import { UpdateOrderServiceImpl } from '@ecommerce-backend/src/domain/services/o
 import { CouponRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/coupon.impl';
 import { CreateProductSizeServiceImpl } from '@ecommerce-backend/src/domain/services/product/createSize';
 import { UpdateCouponServiceImpl } from '@ecommerce-backend/src/domain/services/coupon/update';
+import { QueryServiceImpl } from '@ecommerce-backend/src/domain/services/product/query';
+import { FilterServiceImpl } from '@ecommerce-backend/src/domain/services/product/filter';
+import { ProductCartRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/products/cart.impl';
+import { CreateProductCartServiceImpl } from '@ecommerce-backend/src/domain/services/cart/create';
+import { GetProductCartByAccountIdServiceImpl } from '@ecommerce-backend/src/domain/services/cart/getByAccountId';
 
 // ==============================||  INJECTTION INIT ||============================== //
 
@@ -85,6 +90,7 @@ const InjectionInit = catchAsync(async () => {
     Container.set(OTPController, new OTPController());
     Container.set(CategoryController, new CategoryController());
     Container.set(ProductController, new ProductController());
+    Container.set(ProductCartController, new ProductCartController());
     Container.set(OrderController, new OrderController());
     Container.set(CouponController, new CouponController());
 
@@ -123,9 +129,12 @@ const InjectionInit = catchAsync(async () => {
     Container.set(DeleteProductServiceImpl, new DeleteProductServiceImpl());
     Container.set(GetProductByIdServiceImpl, new GetProductByIdServiceImpl());
     Container.set(GetAllProductServiceImpl, new GetAllProductServiceImpl());
-    Container.set(GetProductByIdAndSizeServiceImpl, new GetProductByIdAndSizeServiceImpl());
     Container.set(GetAllProductSizeServiceImpl, new GetAllProductSizeServiceImpl());
     Container.set(CreateProductSizeServiceImpl, new CreateProductSizeServiceImpl());
+    Container.set(QueryServiceImpl, new QueryServiceImpl());
+    Container.set(FilterServiceImpl, new FilterServiceImpl());
+    Container.set(CreateProductCartServiceImpl, new CreateProductCartServiceImpl());
+    Container.set(GetProductCartByAccountIdServiceImpl, new GetProductCartByAccountIdServiceImpl());
 
     // * define order services
     Container.set(CreateOrderServiceImpl, new CreateOrderServiceImpl());
@@ -154,6 +163,7 @@ const InjectionInit = catchAsync(async () => {
     // * products repository
     Container.set(ProductRepositoryImpl, new ProductRepositoryImpl());
     Container.set(ProductSizeRepositoryImpl, new ProductSizeRepositoryImpl());
+    Container.set(ProductCartRepositoryImpl, new ProductCartRepositoryImpl());
 });
 
 export default InjectionInit;

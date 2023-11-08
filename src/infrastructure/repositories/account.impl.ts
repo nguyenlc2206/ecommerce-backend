@@ -33,16 +33,16 @@ export class AccountRepositoryImpl<T extends AccountModel> implements AccountRep
 
     /** overiding getById method */
     async getById(id: string): Promise<T> {
-        const result = await AccountEntity.findById(id).select('+password');
+        const popObj = {
+            path: 'AccountProductCart',
+            select: 'id status products'
+        };
+        const result = await AccountEntity.findById(id).select('+password').populate(popObj);
         return result as T;
     }
 
     /** overiding getAll method */
     async getAll(): Promise<T[]> {
-        // const popObj = {
-        //     path: 'categories',
-        //     select: 'name'
-        // };
         // const result = await AccountEntity.find().populate(popObj);
         const result = await AccountEntity.find();
         return result as T[];

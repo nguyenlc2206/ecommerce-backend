@@ -8,9 +8,10 @@ import { UpdateProductController } from '@ecommerce-backend/src/main/controllers
 import { DeleteProductController } from '@ecommerce-backend/src/main/controllers/product/delete.controller';
 import { GetProductByIdController } from '@ecommerce-backend/src/main/controllers/product/getById.controller';
 import { GetAllProductController } from '@ecommerce-backend/src/main/controllers/product/getAll.controller';
-import { GetProductByIdAndSizeController } from '@ecommerce-backend/src/main/controllers/product/getByIdAndSize';
+import { QueryProductsController } from '@ecommerce-backend/src/main/controllers/product/query.controller';
 import { GetAllSizeProductController } from '@ecommerce-backend/src/main/controllers/product/getAllSize.controller';
 import { CreateProductSizeController } from '@ecommerce-backend/src/main/controllers/product/createSize.controller';
+import { FilterProductsController } from '@ecommerce-backend/src/main/controllers/product/filter.controller';
 
 // ==============================||  PRODUCT CONTROLLER ||============================== //
 @Service()
@@ -48,9 +49,15 @@ export class ProductController {
         return _init.execute(req, res, next);
     };
 
-    // * getByIdAndSize
-    getByIdAndSize = async (req: Request, res: Response, next: NextFunction) => {
-        const _init = new GetProductByIdAndSizeController();
+    // * query
+    query = async (req: Request, res: Response, next: NextFunction) => {
+        const _init = new QueryProductsController();
+        return _init.execute(req, res, next);
+    };
+
+    // * filter
+    filter = async (req: Request, res: Response, next: NextFunction) => {
+        const _init = new FilterProductsController();
         return _init.execute(req, res, next);
     };
 

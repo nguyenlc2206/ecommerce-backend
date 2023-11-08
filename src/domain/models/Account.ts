@@ -1,5 +1,6 @@
 import { CategoryModel } from '@ecommerce-backend/src/domain/models/Category';
 import { KeyedObject } from '@ecommerce-backend/src/shared/types';
+import { ProductCartModel } from './products/Cart';
 
 /** @todo: define account model reponse */
 export class AccountModel {
@@ -20,8 +21,11 @@ export class AccountModel {
     categories?: CategoryModel[];
     shippingAddress?: KeyedObject;
     file?: Express.Multer.File;
+    cart?: ProductCartModel;
+    AccountProductCart?: ProductCartModel[];
 
     fromAccountModel(account: AccountModel) {
+        const _init = new ProductCartModel();
         return {
             id: account?.id,
             email: account?.email,
@@ -29,7 +33,9 @@ export class AccountModel {
             phoneNo: account?.phoneNo,
             avatar: account?.avatar,
             role: account?.role,
-            isDeleted: account?.isDeleted
+            isDeleted: account?.isDeleted,
+            shippingAddress: account?.shippingAddress,
+            cart: account?.AccountProductCart ? _init.fromProductCartModelGetAll(account?.AccountProductCart)[0] : []
         } as AccountModel;
     }
 
@@ -42,7 +48,8 @@ export class AccountModel {
             role: account?.role,
             isDeleted: account?.isDeleted,
             avatar: account?.avatar,
-            accessToken: token
+            accessToken: token,
+            shippingAddress: account?.shippingAddress
         } as AccountModel;
     }
 
@@ -57,7 +64,8 @@ export class AccountModel {
                 avatar: item?.avatar,
                 role: item?.role,
                 isDeleted: item?.isDeleted,
-                categories: item?.categories
+                categories: item?.categories,
+                shippingAddress: item?.shippingAddress
             } as AccountModel);
         });
         return accounts as AccountModel[];

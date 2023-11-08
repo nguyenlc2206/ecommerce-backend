@@ -100,6 +100,13 @@ AccountSchema.virtual('AccountCoupon', {
     foreignField: 'accountId' // is equal to foreignField
 });
 
+/** define relation one to many product cart */
+AccountSchema.virtual('AccountProductCart', {
+    ref: 'ProductCart', //The Model to use
+    localField: '_id', //Find in Model, where localField
+    foreignField: 'accountId' // is equal to foreignField
+});
+
 // * compile the schema to model
 const AccountEntity = mongoose.model('Account', AccountSchema);
 

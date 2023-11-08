@@ -44,9 +44,6 @@ const OrderSchema = new mongoose.Schema(
             type: String,
             default: 'Not specified'
         },
-        urlPayment: {
-            type: String
-        },
         //For admin
         status: {
             type: String,

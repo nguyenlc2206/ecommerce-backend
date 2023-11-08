@@ -78,7 +78,7 @@ export class CreateProductServiceImpl<Entity extends AccountRequest> implements 
         const sizes: Array<string> = [];
         entity?.body?.sizes.map((item: string) => {
             const _item = JSON.parse(item);
-            sizes.push(_item?.size);
+            if (!sizes.includes(_item?.size)) sizes.push(_item?.size);
         });
         /** handle save product */
         const dataCreate = { ...entity?.body, sizes: sizes, images: images.data, accountId: entity?.account?.id };

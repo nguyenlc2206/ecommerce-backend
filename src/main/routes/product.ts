@@ -7,10 +7,12 @@ import { ProductController } from '@ecommerce-backend/src/main/controllers/produ
 import { AuthenticationController } from '@ecommerce-backend/src/main/controllers/authentication';
 import middlewareRoleRestrictTo from '@ecommerce-backend/src/shared/common/middleware';
 import uploadFile from '@ecommerce-backend/src/shared/common/uploadFile';
+import { ProductCartController } from '@ecommerce-backend/src/main/controllers/cart';
 
 /** init controller */
 const instanceProduct = Container.get(ProductController);
 const instanceAuth = Container.get(AuthenticationController);
+const instanceProductCart = Container.get(ProductCartController);
 
 /** @todo: init routes */
 export const ProductRoutes = (router: Router) => {
@@ -22,6 +24,10 @@ export const ProductRoutes = (router: Router) => {
         middlewareRoleRestrictTo(['admin']),
         instanceProduct.create
     );
+    /** add product cart */
+    router.post('/product/cart', instanceAuth.protect, instanceProductCart.create);
+    /** get product cart by account id*/
+    router.get('/product/cart', instanceAuth.protect, instanceProductCart.getByAccountId);
     /** create size method */
     router.post('/product/size', instanceAuth.protect, middlewareRoleRestrictTo(['admin']), instanceProduct.createSize);
     /** update method */
@@ -40,5 +46,7 @@ export const ProductRoutes = (router: Router) => {
         instanceProduct.getAllSize
     );
     /** get product by id and size*/
-    router.get('/product?:id?:size', instanceAuth.protect, instanceProduct.getByIdAndSize);
+    router.get('/product?:id?:size', instanceAuth.protect, instanceProduct.query);
+    /** filter product */
+    router.post('/product/filter', instanceAuth.protect, instanceProduct.filter);
 };

@@ -1,5 +1,6 @@
 import { KeyedObject } from '@ecommerce-backend/src/shared/types';
 import { CategoryModel } from '@ecommerce-backend/src/domain/models/Category';
+import { ProductSizeModel } from '@ecommerce-backend/src/domain/models/products/Size';
 
 /** @todo: define Product model reponse */
 export class ProductModel {
@@ -15,31 +16,55 @@ export class ProductModel {
     createdAt?: Date;
     updatedAt?: Date;
     category?: CategoryModel;
+    products?: ProductSizeModel[];
+    filter?: any;
+    filterCategories?: any;
+    filterProductSize?: any;
 
     fromProductModel(productModel: KeyedObject) {
-        const _init = new CategoryModel();
+        const _init = new ProductSizeModel();
         return {
             id: productModel?.id,
             name: productModel?.name,
             description: productModel?.description,
             sizes: productModel?.sizes,
             images: productModel?.images,
-            category: _init.fromCategoryModelCreate(productModel?.categoryId)
+            products: _init.fromProductModelGetAll(productModel?.ProductSize)
         } as ProductModel;
     }
 
     fromProductModelGetAll(productModel: ProductModel[]) {
         let products: ProductModel[] = [];
-        const _init = new CategoryModel();
+        const _init = new ProductSizeModel();
         productModel?.map((item: KeyedObject) => {
             if (!item?.isDeleted) {
                 products.push({
                     id: item?.id,
                     name: item?.name,
                     description: item?.description,
-                    sizes: item?.sizes,
                     images: item?.images,
-                    category: _init.fromCategoryModelCreate(item?.categoryId),
+                    products: _init.fromProductModelGetAll(item?.ProductSize),
+                    isDeleted: item?.isDeleted
+                } as ProductModel);
+            }
+        });
+
+        return products;
+    }
+
+    fromProductModelFilter(productModel: ProductModel[]) {
+        let products: ProductModel[] = [];
+        const _init = new ProductSizeModel();
+        const _initCategory = new CategoryModel();
+        productModel?.map((item: KeyedObject) => {
+            if (!item?.isDeleted && item?.categoryId) {
+                products.push({
+                    id: item?.id,
+                    name: item?.name,
+                    description: item?.description,
+                    images: item?.images,
+                    category: _initCategory.fromCategoryModel(item?.categoryId),
+                    products: _init.fromProductModelGetAll(item?.ProductSize),
                     isDeleted: item?.isDeleted
                 } as ProductModel);
             }

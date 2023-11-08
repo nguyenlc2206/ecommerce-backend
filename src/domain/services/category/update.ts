@@ -54,7 +54,7 @@ export class UpdateCategoryServiceImpl<Entity extends AccountRequest> implements
             ..._entity
         });
         const _init = new CategoryModel();
-        const result = _init.fromCategoryModelCreate(reponse);
+        const result = _init.fromCategoryModel(reponse);
 
         return success(result);
     }

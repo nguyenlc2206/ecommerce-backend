@@ -6,6 +6,7 @@ import { Container } from 'typedi';
 import { CategoryController } from '@ecommerce-backend/src/main/controllers/category';
 import { AuthenticationController } from '@ecommerce-backend/src/main/controllers/authentication';
 import middlewareRoleRestrictTo from '@ecommerce-backend/src/shared/common/middleware';
+import uploadFile from '@ecommerce-backend/src/shared/common/uploadFile';
 
 /** init controller */
 const instanceCategory = Container.get(CategoryController);
@@ -14,7 +15,13 @@ const instanceAuth = Container.get(AuthenticationController);
 /** @todo: init routes */
 export const CategoryRoutes = (router: Router) => {
     /** create method */
-    router.post('/category', instanceAuth.protect, middlewareRoleRestrictTo(['admin']), instanceCategory.create);
+    router.post(
+        '/category',
+        uploadFile.single('image'),
+        instanceAuth.protect,
+        middlewareRoleRestrictTo(['admin']),
+        instanceCategory.create
+    );
     /** update method */
     router.patch('/category/:id', instanceAuth.protect, middlewareRoleRestrictTo(['admin']), instanceCategory.update);
     /** delete method */

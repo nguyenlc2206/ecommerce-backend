@@ -28,11 +28,20 @@ export class ProductRepositoryImpl<T extends ProductModel> implements ProductRep
     /** overiding getById method */
     async getById(id: string): Promise<T> {
         const popObj = {
-            path: 'categoryId'
-            // select: 'name'
+            path: 'ProductSize'
         };
         const result = await ProductEntity.findById(id).populate(popObj);
         return result as T;
+    }
+
+    /** overiding getById method */
+    async getByCategoryId(id: string): Promise<T[]> {
+        const popObj = {
+            path: 'categoryId'
+            // select: 'name'
+        };
+        const result = await ProductEntity.find({ categoryId: id }).populate(popObj);
+        return result as T[];
     }
 
     /** overiding delete method */
@@ -48,10 +57,23 @@ export class ProductRepositoryImpl<T extends ProductModel> implements ProductRep
     /** overiding getAll method */
     async getAll(): Promise<T[]> {
         const popObj = {
-            path: 'categoryId',
-            select: 'name id'
+            path: 'ProductSize'
         };
         const result = await ProductEntity.find().populate(popObj);
+        return result as T[];
+    }
+
+    /** overiding find method */
+    async find(entity: T): Promise<T[]> {
+        const popObjCategory = {
+            path: 'categoryId',
+            match: entity?.filterCategories
+        };
+        const popObjProductSize = {
+            path: 'ProductSize',
+            match: entity?.filterProductSize
+        };
+        const result = await ProductEntity.find(entity.filter).populate(popObjCategory).populate(popObjProductSize);
         return result as T[];
     }
 }
