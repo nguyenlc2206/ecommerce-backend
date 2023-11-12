@@ -40,4 +40,14 @@ export class ProductCartRepositoryImpl<T extends ProductCartModel> implements Pr
         const result = await ProductCartEntity.findOne({ accountId: id });
         return result as T;
     }
+
+    /** overiding delete method */
+    async delete(id: string): Promise<void> {
+        const result = await ProductCartEntity.findById(id);
+        if (result) {
+            result.isDeleted = true;
+            result.deletedAt = new Date(Date.now());
+            await result.save();
+        }
+    }
 }

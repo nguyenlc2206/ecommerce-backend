@@ -32,7 +32,8 @@ export class CouponModel {
     fromCouponModelDiscount(couponModel: KeyedObject) {
         return {
             id: couponModel?.id,
-            discount: couponModel?.discount
+            discount: couponModel?.discount,
+            code: couponModel?.code
         } as CouponModel;
     }
 

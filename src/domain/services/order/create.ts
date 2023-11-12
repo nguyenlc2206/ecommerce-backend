@@ -70,15 +70,18 @@ export class CreateOrderServiceImpl<Entity extends AccountRequest> implements Cr
         // * handle save order
         const resultSave = await this.handleSaveOrder(entity?.accountId, entity?.body);
         if (resultSave.isFailure()) return failure(resultSave.error);
+        const _init = new OrderModel();
+        const result = _init.fromOrderModel(resultSave.data);
 
         // * handle update product size
         const resultUpdate = this.handleUpdateProductSize(entity);
-
-        // * handle create session stripe
-        const resultStripe = await this.handleCreateStripeSession(entity, resultSave.data?.id!, coupon);
-        if (resultStripe.isFailure()) return failure(resultStripe.error);
-
-        return success(resultStripe.data);
+        if (entity?.body?.paymentCharged?.method === 'card') {
+            // * handle create session stripe
+            const resultStripe = await this.handleCreateStripeSession(entity, resultSave.data?.id!, coupon);
+            if (resultStripe.isFailure()) return failure(resultStripe.error);
+            return success({ ...resultStripe.data, ...result });
+        }
+        return success(result);
     }
 
     /** @todo: check has address */
@@ -165,11 +168,12 @@ export class CreateOrderServiceImpl<Entity extends AccountRequest> implements Cr
                     unit_amount:
                         _discount + coupon?.discount
                             ? item?.price * (1 - (_discount + coupon?.discount) / 100)
-                            : item?.price
+                            : item?.price * (1 - _discount / 100)
                 },
                 quantity: item?.qty
             };
         });
+        // console.log('>>>Check convertedOrders:', convertedOrders);
 
         const session = await this.stripe.checkout.sessions.create({
             payment_method_types: ['card'],
@@ -178,7 +182,8 @@ export class CreateOrderServiceImpl<Entity extends AccountRequest> implements Cr
             metadata: {
                 orderId: JSON.stringify(orderId),
                 accountId: JSON.stringify(req?.accountId),
-                couponId: JSON.stringify(coupon?.id)
+                couponId: JSON.stringify(coupon?.id),
+                typeCoupon: JSON.stringify(coupon?.type)
             },
             mode: 'payment',
             client_reference_id: orderId,

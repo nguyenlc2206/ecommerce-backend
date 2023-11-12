@@ -4,4 +4,5 @@ export interface ProductCartRepository<T> {
     update(id?: string, entity?: T): Promise<any>;
     find(entity: T): Promise<T[]>;
     getCartByAccountId(id: string): Promise<T>;
+    delete(id?: string): Promise<void>;
 }

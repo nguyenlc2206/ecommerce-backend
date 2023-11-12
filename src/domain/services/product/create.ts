@@ -76,12 +76,20 @@ export class CreateProductServiceImpl<Entity extends AccountRequest> implements 
 
         /** processing sizes */
         const sizes: Array<string> = [];
+        const colors: Array<string> = [];
         entity?.body?.sizes.map((item: string) => {
             const _item = JSON.parse(item);
             if (!sizes.includes(_item?.size)) sizes.push(_item?.size);
+            if (!colors.includes(_item?.color)) colors.push(_item?.color);
         });
         /** handle save product */
-        const dataCreate = { ...entity?.body, sizes: sizes, images: images.data, accountId: entity?.account?.id };
+        const dataCreate = {
+            ...entity?.body,
+            sizes: sizes,
+            colors: colors,
+            images: images.data,
+            accountId: entity?.account?.id
+        };
         // const dataCreate = { ...entity?.body, sizes: sizes, accountId: entity?.account?.id };
         const response = await this.productRepo.create(dataCreate);
         const _init = new ProductModel();

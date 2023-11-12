@@ -15,10 +15,12 @@ const ProductCartSchema = new mongoose.Schema(
             ref: 'Account',
             required: true
         },
+        discounts: [{ type: Object }],
+        paymentMethod: { type: String },
         status: {
             type: String,
             required: true,
-            enum: ['initial', 'billing', 'payment'],
+            enum: ['initial', 'billing', 'payment', 'complete'],
             default: 'initial'
         },
         billingAddress: {

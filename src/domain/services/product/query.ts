@@ -1,6 +1,7 @@
 // * import libs
 import 'reflect-metadata';
 import { Container, Service } from 'typedi';
+import * as _ from 'lodash';
 
 // import projects
 import AppError from '@ecommerce-backend/src/shared/common/appError';
@@ -32,18 +33,35 @@ export class QueryServiceImpl<Entity extends AccountRequest> implements QuerySer
         if (resultQuery.isFailure()) return failure(resultQuery.error);
 
         const _init = new ProductModel();
-        const result = _init.fromProductModelGetAll(resultQuery.data);
+        const result = _init.fromProductModelQuery(resultQuery.data);
         return success(result);
     }
 
     // processing feature
     private handleQuery = async (req: AccountRequest): Promise<Either<ProductModel[], AppError>> => {
         const queryObj = { ...req.query };
+        let optionsSize = {};
+        // check id
+        if (Object.keys(queryObj).includes('id')) {
+            queryObj['_id'] = queryObj.id;
+            _.unset(queryObj, ['id']);
+        }
+        // check query size and color
+        if (
+            Object.keys(queryObj).includes('size') ||
+            Object.keys(queryObj).includes('color') ||
+            Object.keys(queryObj).includes('sizeId')
+        ) {
+            optionsSize = { size: queryObj?.size, color: queryObj?.color, _id: queryObj?.sizeId };
+            _.unset(queryObj, ['size']);
+            _.unset(queryObj, ['color']);
+            _.unset(queryObj, ['sizeId']);
+        }
         const excludedFields = ['page', 'sort', 'limit', 'fields'];
         excludedFields.forEach((el) => delete queryObj[el]);
 
         // 1B) Advanced filtering
-        let queryStr = JSON.stringify({ filter: queryObj });
+        let queryStr = JSON.stringify({ filter: queryObj, filterProductSize: optionsSize });
         queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
 
         // execute query

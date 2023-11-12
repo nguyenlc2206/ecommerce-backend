@@ -9,6 +9,7 @@ export class ProductModel {
     description?: string;
     categoryId?: CategoryModel;
     sizes?: Array<string>;
+    colors?: Array<string>;
     accountId?: string;
     images?: Array<any>;
     reviews?: Array<string>;
@@ -20,6 +21,7 @@ export class ProductModel {
     filter?: any;
     filterCategories?: any;
     filterProductSize?: any;
+    totalQty?: number;
 
     fromProductModel(productModel: KeyedObject) {
         const _init = new ProductSizeModel();
@@ -28,6 +30,7 @@ export class ProductModel {
             name: productModel?.name,
             description: productModel?.description,
             sizes: productModel?.sizes,
+            colors: productModel?.colors,
             images: productModel?.images,
             products: _init.fromProductModelGetAll(productModel?.ProductSize)
         } as ProductModel;
@@ -41,6 +44,29 @@ export class ProductModel {
                 products.push({
                     id: item?.id,
                     name: item?.name,
+                    sizes: item?.sizes,
+                    colors: item?.colors,
+                    description: item?.description,
+                    images: item?.images,
+                    products: _init.fromProductModelGetAll(item?.ProductSize),
+                    isDeleted: item?.isDeleted
+                } as ProductModel);
+            }
+        });
+
+        return products;
+    }
+
+    fromProductModelQuery(productModel: ProductModel[]) {
+        let products: ProductModel[] = [];
+        const _init = new ProductSizeModel();
+        productModel?.map((item: KeyedObject) => {
+            if (!item?.isDeleted && item?.ProductSize.length) {
+                products.push({
+                    id: item?.id,
+                    name: item?.name,
+                    sizes: item?.sizes,
+                    colors: item?.colors,
                     description: item?.description,
                     images: item?.images,
                     products: _init.fromProductModelGetAll(item?.ProductSize),

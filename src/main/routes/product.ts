@@ -24,8 +24,14 @@ export const ProductRoutes = (router: Router) => {
         middlewareRoleRestrictTo(['admin']),
         instanceProduct.create
     );
+    /** get product search*/
+    router.get('/product/search', instanceAuth.protect, instanceProduct.query);
     /** add product cart */
     router.post('/product/cart', instanceAuth.protect, instanceProductCart.create);
+    /** update product cart */
+    router.patch('/product/cart', instanceAuth.protect, instanceProductCart.update);
+    /** delete product cart */
+    router.delete('/product/cart/:id', instanceAuth.protect, instanceProductCart.delete);
     /** get product cart by account id*/
     router.get('/product/cart', instanceAuth.protect, instanceProductCart.getByAccountId);
     /** create size method */
@@ -45,8 +51,6 @@ export const ProductRoutes = (router: Router) => {
         middlewareRoleRestrictTo(['admin']),
         instanceProduct.getAllSize
     );
-    /** get product by id and size*/
-    router.get('/product?:id?:size', instanceAuth.protect, instanceProduct.query);
     /** filter product */
     router.post('/product/filter', instanceAuth.protect, instanceProduct.filter);
 };

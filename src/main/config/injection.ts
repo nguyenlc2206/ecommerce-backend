@@ -73,6 +73,8 @@ import { FilterServiceImpl } from '@ecommerce-backend/src/domain/services/produc
 import { ProductCartRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/products/cart.impl';
 import { CreateProductCartServiceImpl } from '@ecommerce-backend/src/domain/services/cart/create';
 import { GetProductCartByAccountIdServiceImpl } from '@ecommerce-backend/src/domain/services/cart/getByAccountId';
+import { UpdateProductCardServiceImpl } from '@ecommerce-backend/src/domain/services/cart/update';
+import { DeleteProductCartServiceImpl } from '@ecommerce-backend/src/domain/services/cart/delete';
 
 // ==============================||  INJECTTION INIT ||============================== //
 
@@ -135,6 +137,8 @@ const InjectionInit = catchAsync(async () => {
     Container.set(FilterServiceImpl, new FilterServiceImpl());
     Container.set(CreateProductCartServiceImpl, new CreateProductCartServiceImpl());
     Container.set(GetProductCartByAccountIdServiceImpl, new GetProductCartByAccountIdServiceImpl());
+    Container.set(UpdateProductCardServiceImpl, new UpdateProductCardServiceImpl());
+    Container.set(DeleteProductCartServiceImpl, new DeleteProductCartServiceImpl());
 
     // * define order services
     Container.set(CreateOrderServiceImpl, new CreateOrderServiceImpl());

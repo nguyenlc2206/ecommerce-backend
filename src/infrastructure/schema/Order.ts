@@ -23,6 +23,10 @@ const OrderSchema = new mongoose.Schema(
             type: Object,
             required: true
         },
+        paymentCharged: {
+            type: Object,
+            required: true
+        },
         orderNumber: {
             type: String,
             default: randomTxt + randomNumbers

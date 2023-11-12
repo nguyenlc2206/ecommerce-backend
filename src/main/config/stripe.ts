@@ -37,7 +37,7 @@ const StripeWebhook = (app: Express): void => {
                 case 'checkout.session.completed':
                     //update the order
                     const session = event.data.object;
-                    const { orderId, accountId, couponId } = session.metadata!;
+                    const { orderId, accountId, couponId, typeCoupon } = session.metadata!;
 
                     /** @todo: update order */
                     const dataUpdateOrder = {
@@ -52,7 +52,8 @@ const StripeWebhook = (app: Express): void => {
                     /** @todo: update coupon */
                     const dataUpdateCoupon = {
                         id: JSON.parse(couponId),
-                        accountId: JSON.parse(accountId)
+                        accountId: JSON.parse(accountId),
+                        type: JSON.parse(typeCoupon)
                     } as CouponModel;
                     const responseUpdateCoupon = updateCouponService.execute(dataUpdateCoupon);
                     // Then define and call a function to handle the event payment_intent.succeeded

@@ -31,17 +31,23 @@ export class UpdateCouponServiceImpl<Entity extends CouponModel> implements Upda
         const resultGet = await this.handleGetCoupon(entity?.id);
         if (resultGet.isFailure()) return failure(resultGet.error);
         const { data: coupon } = resultGet;
-        const arrayAccountId = coupon?.accountIdExpires;
-        arrayAccountId?.push(entity?.accountId!);
+        let response = {} as CouponModel;
+        if (coupon?.type === 'all') {
+            const arrayAccountId = coupon?.accountIdExpires;
+            arrayAccountId?.push(entity?.accountId!);
 
-        /** handle update coupon */
-        const resultUpdate = await this.handelUpdateCoupon(entity?.id, {
-            accountIdExpires: arrayAccountId
-        } as CouponModel);
+            /** handle update coupon */
+            const resultUpdate = await this.handelUpdateCoupon(entity?.id, {
+                accountIdExpires: arrayAccountId
+            } as CouponModel);
 
-        if (resultUpdate.isFailure()) return failure(resultUpdate.error);
-
-        return success(resultUpdate.data);
+            if (resultUpdate.isFailure()) return failure(resultUpdate.error);
+            response = resultUpdate.data;
+        } else {
+            const resultUpdate = await this.couponRepo.delete(entity?.id);
+            return success({} as CouponModel);
+        }
+        return success(response);
     }
 
     // * get coupon from database
