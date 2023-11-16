@@ -16,6 +16,13 @@ const instanceAuth = Container.get(AuthenticationController);
 
 /** @todo: init routes */
 export const AccountRoutes = (router: Router) => {
+    /** active account */
+    router.get(
+        '/account/active/:id',
+        instanceAuth.protect,
+        middlewareRoleRestrictTo(['admin']),
+        instanceAccount.active
+    );
     /** get account me */
     router.get('/account-me', instanceAuth.protect, instanceAccount.getMe);
     /** update account me */

@@ -8,6 +8,7 @@ import { ProtectedRoutesController } from '@ecommerce-backend/src/main/controlle
 import { ChangePasswordController } from '@ecommerce-backend/src/main/controllers/authentication/changePassword.controller';
 import { ForgotPasswordController } from '@ecommerce-backend/src/main/controllers/authentication/forgotPassword.controller';
 import { LogoutController } from '@ecommerce-backend/src/main/controllers/authentication/logout.controller';
+import { ChangePasswordAdminController } from '@ecommerce-backend/src/main/controllers/authentication/changePasswordAdmin.controller';
 
 // ==============================||  AUTHENTICATION CONTROLLER ||============================== //
 
@@ -37,6 +38,12 @@ export class AuthenticationController {
     /** change password router */
     changePassword = async (req: Request, res: Response, next: NextFunction) => {
         const _init = new ChangePasswordController();
+        return _init.execute(req, res, next);
+    };
+
+    /** change password router */
+    changePasswordAdmin = async (req: Request, res: Response, next: NextFunction) => {
+        const _init = new ChangePasswordAdminController();
         return _init.execute(req, res, next);
     };
 

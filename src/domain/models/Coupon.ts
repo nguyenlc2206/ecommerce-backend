@@ -13,6 +13,7 @@ export class CouponModel {
     isDeleted?: boolean;
     createdAt?: Date;
     updatedAt?: Date;
+    deletedAt?: Date | null;
     account?: AccountModel;
     accountIdExpires?: Array<string>;
 
@@ -48,6 +49,7 @@ export class CouponModel {
                 discount: item?.discount,
                 account: item?.accountId,
                 type: item?.type,
+                accountIdExpires: item?.accountIdExpires,
                 isDeleted: item?.isDeleted
             } as CouponModel);
         });

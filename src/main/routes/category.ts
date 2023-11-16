@@ -14,6 +14,13 @@ const instanceAuth = Container.get(AuthenticationController);
 
 /** @todo: init routes */
 export const CategoryRoutes = (router: Router) => {
+    /** active category */
+    router.get(
+        '/category/active/:id',
+        instanceAuth.protect,
+        middlewareRoleRestrictTo(['admin']),
+        instanceCategory.active
+    );
     /** create method */
     router.post(
         '/category',
@@ -23,7 +30,13 @@ export const CategoryRoutes = (router: Router) => {
         instanceCategory.create
     );
     /** update method */
-    router.patch('/category/:id', instanceAuth.protect, middlewareRoleRestrictTo(['admin']), instanceCategory.update);
+    router.patch(
+        '/category/:id',
+        uploadFile.single('image'),
+        instanceAuth.protect,
+        middlewareRoleRestrictTo(['admin']),
+        instanceCategory.update
+    );
     /** delete method */
     router.delete('/category/:id', instanceAuth.protect, middlewareRoleRestrictTo(['admin']), instanceCategory.delete);
     /** getAll mwthod */

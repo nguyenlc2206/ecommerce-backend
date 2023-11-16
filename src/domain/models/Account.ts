@@ -13,6 +13,7 @@ export class AccountModel {
     role?: string;
     createdAt?: Date;
     updatedAt?: Date;
+    deletedAt?: Date | null;
     accessToken?: string;
     passwordChangedAt?: Date;
     OTP?: string;

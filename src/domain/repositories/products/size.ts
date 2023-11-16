@@ -6,4 +6,6 @@ export interface ProductSizeRepository<T> {
     update(id?: string, entity?: T): Promise<any>;
     getByProductId(id?: string): Promise<T[]>;
     find(entity: T): Promise<T[]>;
+    getById(id: string): Promise<T>;
+    sort(): Promise<T[]>;
 }

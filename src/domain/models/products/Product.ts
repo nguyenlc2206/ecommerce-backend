@@ -16,6 +16,7 @@ export class ProductModel {
     isDeleted?: boolean;
     createdAt?: Date;
     updatedAt?: Date;
+    deletedAt?: Date | null;
     category?: CategoryModel;
     products?: ProductSizeModel[];
     filter?: any;
@@ -25,6 +26,7 @@ export class ProductModel {
 
     fromProductModel(productModel: KeyedObject) {
         const _init = new ProductSizeModel();
+        const _category = new CategoryModel();
         return {
             id: productModel?.id,
             name: productModel?.name,
@@ -32,26 +34,28 @@ export class ProductModel {
             sizes: productModel?.sizes,
             colors: productModel?.colors,
             images: productModel?.images,
-            products: _init.fromProductModelGetAll(productModel?.ProductSize)
+            products: _init.fromProductModelGetAll(productModel?.ProductSize),
+            category: _category.fromCategoryModel(productModel?.categoryId)
         } as ProductModel;
     }
 
     fromProductModelGetAll(productModel: ProductModel[]) {
         let products: ProductModel[] = [];
         const _init = new ProductSizeModel();
+        const _category = new CategoryModel();
+
         productModel?.map((item: KeyedObject) => {
-            if (!item?.isDeleted) {
-                products.push({
-                    id: item?.id,
-                    name: item?.name,
-                    sizes: item?.sizes,
-                    colors: item?.colors,
-                    description: item?.description,
-                    images: item?.images,
-                    products: _init.fromProductModelGetAll(item?.ProductSize),
-                    isDeleted: item?.isDeleted
-                } as ProductModel);
-            }
+            products.push({
+                id: item?.id,
+                name: item?.name,
+                sizes: item?.sizes,
+                colors: item?.colors,
+                description: item?.description,
+                images: item?.images,
+                products: _init.fromProductModelGetAll(item?.ProductSize),
+                category: _category.fromCategoryModel(item?.categoryId),
+                isDeleted: item?.isDeleted
+            } as ProductModel);
         });
 
         return products;

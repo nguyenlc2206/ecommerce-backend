@@ -66,6 +66,8 @@ export class LoginServiceImpl<Entity extends AccountModel> implements LoginServi
     private handleGetAccountByEmail = async (email?: string): Promise<Either<AccountModel | undefined, AppError>> => {
         const response = await this.accountRepo.getByEmail(email!);
         if (!response) return failure(new AppError('Email is not exists!', 400));
+        if (response?.isDeleted)
+            return failure(new AppError('Account is block. Please contact admin to unlock account!', 400));
         return success(response);
     };
 

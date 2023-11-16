@@ -10,7 +10,7 @@ import { AccountRequest } from '@ecommerce-backend/src/shared/types';
 import { OrderModel } from '@ecommerce-backend/src/domain/models/Order';
 import AppError from '@ecommerce-backend/src/shared/common/appError';
 import { OrderRepository } from '@ecommerce-backend/src/domain/repositories/order';
-import { OrderRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/order';
+import { OrderRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/order.impl';
 
 // ==============================||  UPDATE ORDER SERVICES IMPLEMENT ||============================== //
 
@@ -29,6 +29,7 @@ export class UpdateOrderServiceImpl<Entity extends OrderModel> implements Update
 
     /** execute function */
     async execute(entity: Entity): Promise<Either<OrderModel, AppError>> {
+        console.log(entity);
         /** get category from database */
         const resultGet = await this.handleGetOrder(entity?.id);
         if (resultGet.isFailure()) return failure(resultGet.error);

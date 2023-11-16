@@ -7,6 +7,7 @@ import { CreateCouponController } from '@ecommerce-backend/src/main/controllers/
 import { DiscountController } from '@ecommerce-backend/src/main/controllers/coupon/discount.controller';
 import { GetAllCouponController } from '@ecommerce-backend/src/main/controllers/coupon/getAll.controller';
 import { DeleteCouponController } from '@ecommerce-backend/src/main/controllers/coupon/delete.controller';
+import { ActiveCouponController } from '@ecommerce-backend/src/main/controllers/coupon/active.controller';
 
 // ==============================|| CREATE COUPON CONTROLLER ||============================== //
 
@@ -36,6 +37,12 @@ export class CouponController {
     /** delete method */
     delete = async (req: Request, res: Response, next: NextFunction) => {
         const _init = new DeleteCouponController();
+        return _init.execute(req, res, next);
+    };
+
+    // * active method
+    active = async (req: Request, res: Response, next: NextFunction) => {
+        const _init = new ActiveCouponController();
         return _init.execute(req, res, next);
     };
 }

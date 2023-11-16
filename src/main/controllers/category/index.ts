@@ -8,6 +8,7 @@ import { UpdateCategoryController } from '@ecommerce-backend/src/main/controller
 import { DeleteCategoryController } from '@ecommerce-backend/src/main/controllers/category/delete.controller';
 import { GetAllCategoryController } from '@ecommerce-backend/src/main/controllers/category/getAll.controller';
 import { GetCategoryByIdController } from '@ecommerce-backend/src/main/controllers/category/getById.controller';
+import { ActiveCategoryController } from '@ecommerce-backend/src/main/controllers/category/active.controller';
 
 // ==============================||  CATEGORY CONTROLLER ||============================== //
 @Service()
@@ -42,6 +43,12 @@ export class CategoryController {
     // * get account by id
     getById = async (req: Request, res: Response, next: NextFunction) => {
         const _init = new GetCategoryByIdController();
+        return _init.execute(req, res, next);
+    };
+
+    // * active account
+    active = async (req: Request, res: Response, next: NextFunction) => {
+        const _init = new ActiveCategoryController();
         return _init.execute(req, res, next);
     };
 }

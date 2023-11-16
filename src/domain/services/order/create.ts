@@ -5,7 +5,6 @@ import Stripe from 'stripe';
 
 // * import projects
 import AppError from '@ecommerce-backend/src/shared/common/appError';
-
 import { Either, failure, success } from '@ecommerce-backend/src/shared/common/either';
 
 import { AccountRequest, KeyedObject } from '@ecommerce-backend/src/shared/types';
@@ -15,14 +14,19 @@ import { AccountRepositoryImpl } from '@ecommerce-backend/src/infrastructure/rep
 
 import { OrderModel } from '@ecommerce-backend/src/domain/models/Order';
 import { OrderRepository } from '@ecommerce-backend/src/domain/repositories/order';
-import { OrderRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/order';
+import { OrderRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/order.impl';
 
 import { ProductSizeModel } from '@ecommerce-backend/src/domain/models/products/Size';
 import { ProductSizeRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/products/size.impl';
 import { ProductSizeRepository } from '@ecommerce-backend/src/domain/repositories/products/size';
-import ENV from '@ecommerce-backend/src/main/config/env';
 import { DiscountService, DiscountServiceImpl } from '@ecommerce-backend/src/domain/services/coupon/discount';
 import { CouponModel } from '@ecommerce-backend/src/domain/models/Coupon';
+import { CouponRepository } from '@ecommerce-backend/src/domain/repositories/coupon';
+
+// import payment
+import { PaymentStripeService, PaymentStripeServiceImpl } from '@ecommerce-backend/src/domain/services/payment/stripe';
+import { CouponRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/coupon.impl';
+import { Email } from '@ecommerce-backend/src/shared/common/email';
 
 // ==============================||  CREATE ORDER SERVICES IMPLEMENT ||============================== //
 
@@ -37,9 +41,11 @@ export class CreateOrderServiceImpl<Entity extends AccountRequest> implements Cr
     protected orderRepo: OrderRepository<OrderModel>;
     protected productSizeRepo: ProductSizeRepository<ProductSizeModel>;
     protected discountService: DiscountService<AccountRequest>;
+    protected couponRepo: CouponRepository<CouponModel>;
 
-    //stripe instance
-    protected stripe = new Stripe(ENV.stripeSecretKey);
+    /** init stripe payment */
+    protected paymentStripe: PaymentStripeService<KeyedObject>;
+    protected emailService: Email<KeyedObject>;
 
     /** constructor */
     constructor() {
@@ -47,6 +53,9 @@ export class CreateOrderServiceImpl<Entity extends AccountRequest> implements Cr
         this.orderRepo = Container.get(OrderRepositoryImpl);
         this.productSizeRepo = Container.get(ProductSizeRepositoryImpl);
         this.discountService = Container.get(DiscountServiceImpl);
+        this.paymentStripe = Container.get(PaymentStripeServiceImpl);
+        this.couponRepo = Container.get(CouponRepositoryImpl);
+        this.emailService = Container.get(Email);
     }
 
     /** overiding execute */
@@ -73,15 +82,26 @@ export class CreateOrderServiceImpl<Entity extends AccountRequest> implements Cr
         const _init = new OrderModel();
         const result = _init.fromOrderModel(resultSave.data);
 
+        // * handle send email confirm order
+        const resultSendEmail = this.handleSendEmailConfirmOrder(entity, result);
+
         // * handle update product size
         const resultUpdate = this.handleUpdateProductSize(entity);
-        if (entity?.body?.paymentCharged?.method === 'card') {
-            // * handle create session stripe
-            const resultStripe = await this.handleCreateStripeSession(entity, resultSave.data?.id!, coupon);
-            if (resultStripe.isFailure()) return failure(resultStripe.error);
-            return success({ ...resultStripe.data, ...result });
+
+        // handle update coupon
+        const resultCoupon = this.handleUpdateCodeCoupon(entity?.accountId!, coupon);
+
+        // switch case processing payment
+        switch (entity?.body?.paymentCharged?.method) {
+            case 'card': {
+                const resultStripe = await this.paymentStripe.execute(entity, resultSave.data?.id!, coupon);
+                if (resultStripe.isFailure()) return failure(resultStripe.error);
+                return success({ ...resultStripe.data, ...result });
+            }
+            default: {
+                return success(result);
+            }
         }
-        return success(result);
     }
 
     /** @todo: check has address */
@@ -150,49 +170,39 @@ export class CreateOrderServiceImpl<Entity extends AccountRequest> implements Cr
         return success(discount.data);
     };
 
-    /** @todo: handle convert orderItems to stripe need */
-    private handleCreateStripeSession = async (
-        req: AccountRequest,
-        orderId: string,
+    /** @todo: processing code is use */
+    private handleUpdateCodeCoupon = async (
+        accountId: string,
         coupon: CouponModel
-    ): Promise<Either<KeyedObject, AppError>> => {
-        const convertedOrders = req?.body?.orderItems.map((item: KeyedObject) => {
-            const _discount = item?.discount ? item?.discount : 0;
-            return {
-                price_data: {
-                    currency: 'usd',
-                    product_data: {
-                        name: item?.name,
-                        description: item?.description
-                    },
-                    unit_amount:
-                        _discount + coupon?.discount
-                            ? item?.price * (1 - (_discount + coupon?.discount) / 100)
-                            : item?.price * (1 - _discount / 100)
-                },
-                quantity: item?.qty
-            };
-        });
-        // console.log('>>>Check convertedOrders:', convertedOrders);
+    ): Promise<Either<CouponModel | void, AppError>> => {
+        const couponFinded = await this.couponRepo.getById(coupon?.id!);
+        if (couponFinded?.type === 'personal') {
+            const res = await this.couponRepo.delete(coupon?.id);
+            return success(res);
+        }
+        const _arrayAccounts = couponFinded?.accountIdExpires;
+        if (!_arrayAccounts?.includes(accountId)) _arrayAccounts?.push(accountId);
+        const res = await this.couponRepo.update(coupon?.id, { accountIdExpires: _arrayAccounts } as CouponModel);
+        return success(res);
+    };
 
-        const session = await this.stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
-            customer_email: req?.email,
-            line_items: convertedOrders,
-            metadata: {
-                orderId: JSON.stringify(orderId),
-                accountId: JSON.stringify(req?.accountId),
-                couponId: JSON.stringify(coupon?.id),
-                typeCoupon: JSON.stringify(coupon?.type)
-            },
-            mode: 'payment',
-            client_reference_id: orderId,
-            success_url: 'http://localhost:8000/success',
-            cancel_url: 'http://localhost:8000/cancel'
-            // success_url: `${req.protocol}://${req.get('host')}/my-orders`,
-            // cancel_url: 'http://localhost:3000/cancel'
-        });
-
-        return success({ url: session.url });
+    /** hadnle send email confirm order */
+    private handleSendEmailConfirmOrder = async (
+        entity: AccountRequest,
+        data: OrderModel
+    ): Promise<Either<boolean, AppError>> => {
+        const dataConfirm = {
+            fullName: entity?.account?.fullName,
+            email: entity?.account?.email,
+            phoneNumber: entity?.account?.phoneNo,
+            paymentType: data?.paymentCharged?.method,
+            orderId: data?.orderNumber,
+            orderDate: data?.createdAt,
+            productItems: data?.orderItems,
+            dicount: entity?.body?.discounts[0]?.value,
+            note: 'Somthing from customer!'
+        } as KeyedObject;
+        const res = await this.emailService.sendEmailConfirmOrder(dataConfirm);
+        return success(true);
     };
 }

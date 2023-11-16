@@ -81,6 +81,8 @@ export class ValidationCreateOrder {
                 required: ['name', 'address']
             },
             codes: { type: 'string' },
+            totalPrice: { type: 'number' },
+            discounts: { type: 'array' },
             paymentCharged: {
                 type: 'object',
                 properties: {

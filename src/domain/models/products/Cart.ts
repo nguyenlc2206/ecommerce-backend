@@ -17,6 +17,7 @@ export class ProductCartModel {
     deletedAt?: Date;
     createdAt?: Date;
     updatedAt?: Date;
+    productId?: string;
 
     fromProductCartModel(productCartModel: ProductCartModel) {
         return {

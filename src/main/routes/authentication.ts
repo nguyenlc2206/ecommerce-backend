@@ -6,6 +6,7 @@ import { Container } from 'typedi';
 import { AccountController } from '@ecommerce-backend/src/main/controllers/account';
 import { AuthenticationController } from '@ecommerce-backend/src/main/controllers/authentication';
 import uploadFile from '@ecommerce-backend/src/shared/common/uploadFile';
+import middlewareRoleRestrictTo from '@ecommerce-backend/src/shared/common/middleware';
 
 /** init instance controller */
 const instanceAuth = Container.get(AuthenticationController);
@@ -19,6 +20,13 @@ export const AuthenticationRoutes = (router: Router) => {
     router.post('/login', instanceAuth.login);
     // * change password account
     router.patch('/change-password', instanceAuth.protect, instanceAuth.changePassword);
+    // * change password by admin
+    router.patch(
+        '/change-password/admin/:id',
+        instanceAuth.protect,
+        middlewareRoleRestrictTo(['admin']),
+        instanceAuth.changePasswordAdmin
+    );
     // * forgot password
     router.patch('/forgot-password', instanceAuth.forgotPassword);
     // * logout router

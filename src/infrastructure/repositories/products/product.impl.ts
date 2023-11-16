@@ -30,7 +30,10 @@ export class ProductRepositoryImpl<T extends ProductModel> implements ProductRep
         const popObj = {
             path: 'ProductSize'
         };
-        const result = await ProductEntity.findById(id).populate(popObj);
+        const popObjCategory = {
+            path: 'categoryId'
+        };
+        const result = await ProductEntity.findById(id).populate(popObj).populate(popObjCategory);
         return result as T;
     }
 
@@ -59,7 +62,10 @@ export class ProductRepositoryImpl<T extends ProductModel> implements ProductRep
         const popObj = {
             path: 'ProductSize'
         };
-        const result = await ProductEntity.find().populate(popObj);
+        const popObjCategory = {
+            path: 'categoryId'
+        };
+        const result = await ProductEntity.find().populate(popObj).populate(popObjCategory);
         return result as T[];
     }
 

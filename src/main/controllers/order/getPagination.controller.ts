@@ -12,7 +12,7 @@ import {
 import { AccountRequest } from '@ecommerce-backend/src/shared/types';
 import { OrderRepository } from '@ecommerce-backend/src/domain/repositories/order';
 import { OrderModel } from '@ecommerce-backend/src/domain/models/Order';
-import { OrderRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/order';
+import { OrderRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/order.impl';
 
 // ==============================||  GET PAGINATION ORDER CONTROLLER ||============================== //
 

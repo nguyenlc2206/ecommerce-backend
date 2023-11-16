@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<style type="text/css">
+
+body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+img { -ms-interpolation-mode: bicubic; }
+
+img { border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+table { border-collapse: collapse !important; }
+body { height: 100% !important; margin: 0 !important; padding: 0 !important; width: 100% !important; }
+
+
+a[x-apple-data-detectors] {
+    color: inherit !important;
+    text-decoration: none !important;
+    font-size: inherit !important;
+    font-family: inherit !important;
+    font-weight: inherit !important;
+    line-height: inherit !important;
+}
+
+@media screen and (max-width: 480px) {
+    .mobile-hide {
+        display: none !important;
+    }
+    .mobile-center {
+        text-align: center !important;
+    }
+}
+div[style*="margin: 16px 0;"] { margin: 0 !important; }
+</style>
+<body style="margin: 0 !important; padding: 0 !important; background-color: #fff;" bgcolor="#eeeeee">
+  <div id=":1w" class="a3s aiL "><div style="font-family:&quot;Arial&quot;,Helvetica Neue,Helvetica,sans-serif;line-height:14pt;padding:20px 0px;font-size:14px;max-width:580px;margin:0 auto"><div class="adM">
+  </div><div style="padding:0 10px;margin-bottom:25px"><div class="adM">
+    
+    </div><p>Xin chào {{fullName}}</p>
+    <p>Cảm ơn Anh/chị đã đặt hàng tại <strong>Ecommerce App</strong>!</p>
+    <p>Đơn hàng của Anh/chị đã được tiếp nhận, chúng tôi sẽ nhanh chóng liên hệ với Anh/chị.</p>
+  </div>
+  <hr>
+  <div style="padding:0 10px">
+    
+    <table style="width:100%;border-collapse:collapse;margin-top:20px">
+      <thead>
+        <tr>
+          <th style="text-align:left;width:50%;font-size:medium;padding:5px 0">Thông tin mua hàng</th>
+          <th style="text-align:left;width:50%;font-size:medium;padding:5px 0">Địa chỉ nhận hàng</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding-right:15px">
+            <table style="width:100%">
+              <tbody>
+                
+                <tr>
+                  <td>{{fullName}}</td>
+                </tr>
+                
+                
+                <tr>
+                  <td style="word-break:break-word;word-wrap:break-word"><a href="mailto:{{email}}" target="_blank">{{email}}</a></td>
+                </tr>
+                
+                
+                <tr>
+                  <td>{{phoneNumber}}</td>
+                </tr>
+                
+              </tbody>
+            </table>
+          </td>
+          <td>
+            <table style="width:100%">
+              <tbody>
+                
+                <tr>
+                  <td>{{fullName}}</td>
+                </tr>
+
+                <tr>
+                  <td> {{phoneNumber}}</td>
+                </tr>
+                
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table style="width:100%;border-collapse:collapse;margin-top:20px">
+      <thead>
+        <tr>
+          <th style="text-align:left;width:50%;font-size:medium;padding:5px 0">Phương thức thanh toán</th>
+          <th style="text-align:left;width:50%;font-size:medium;padding:5px 0">Phương thức vận chuyển</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding-right:15px">{{paymentType}}</td>
+          <td>
+            
+            Giao hàng tận nơi<br>
+            
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+  </div>
+  <div style="margin-top:20px;padding:0 10px">
+    <div style="padding-top:10px;font-size:medium"><strong>Thông tin đơn hàng</strong></div>
+    <table style="width:100%;margin:10px 0">
+      <tbody><tr>
+        <td style="width:50%;padding-right:15px">Mã đơn hàng: #{{orderId}}</td>
+        <td style="width:50%">Ngày đặt hàng:  {{formatDate orderDate}}</td>
+      </tr>
+    </tbody></table>
+    <ul style="padding-left:0;list-style-type:none;margin-bottom:0">
+      
+     
+      
+      {{#each productItems}}
+      <li>
+        <table style="width:100%;border-bottom:1px solid #e4e9eb">
+          <tbody><tr>
+            <td style="width:100%;padding:25px 10px 0px 0" colspan="2">
+              <div style="float:left;width:80px;height:80px;border:1px solid #ebeff2;overflow:hidden">
+                
+                <img style="max-width:100%;max-height:100%" src="{{this.image}}" class="CToWUd" data-bit="iit">
+                
+              </div>
+              <div style="margin-left:100px">
+                <a href="" style="color:#357ebd;text-decoration:none" target="_blank" data-saferedirecturl="">{{this.name}}</a>
+                <p style="color:#678299;margin-bottom:0;margin-top:8px">
+                  {{this.color}}
+                </p>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td style="width:70%;padding:5px 0px 25px">
+              <div style="margin-left:100px">
+                ${{cacularPrice this.price this.discount}}<span style="margin-left:20px">x {{this.qty}}</span>
+              </div>
+            </td>
+            <td style="text-align:right;width:30%;padding:5px 0px 25px">
+              ${{cacularOneProduct this.price this.discount this.qty}} </td>
+          </tr>
+        </tbody></table>
+      </li>
+    {{/each}}
+      
+    </ul>
+    <table style="width:100%;border-collapse:collapse;margin-bottom:50px;margin-top:10px">
+      <tbody><tr>
+        <td style="width:20%"></td>
+        <td style="width:80%">
+          <table style="width:100%;float:right">
+            <tbody><tr>
+              <td style="padding-bottom:10px">Tổng số tiền:</td>
+              <td style="font-weight:bold;text-align:right;padding-bottom:10px">
+                {{cacularTotalPrice productItems}}</td>
+            </tr>
+            <tr>
+              <td style="padding-bottom:10px">Khuyến mãi:</td>
+              <td style="font-weight:bold;text-align:right;padding-bottom:10px">
+                {{cacularTotalCoupon productItems}}</td>
+            </tr>
+            <tr>
+              <td style="padding-bottom:10px">Phí vận chuyển:</td>
+              <td style="font-weight:bold;text-align:right;padding-bottom:10px">
+                $5 </td>
+            </tr>
+            <tr style="border-top:1px solid #e5e9ec">
+              <td style="padding-top:10px">Thành tiền</td>
+              <td style="font-weight:bold;text-align:right;font-size:16px;padding-top:10px">
+                {{addTwoNumAndFormatCurrency}}</td>
+            </tr>
+          </tbody></table>
+        </td>
+      </tr>
+    </tbody></table>
+  </div>
+  <div style="clear:both"></div>
+  
+  <div style="padding:0 10px">
+    <p style="margin:30px 0"><span style="font-weight:bold">Ghi chú:</span> {{note}}</p>
+  </div>
+  
+  <div style="clear:both"></div>
+  <div style="padding:0 10px">
+    
+    <p style="height:50px">
+      <span style="float:left;margin-top:14px;margin-right:10px">Để kiểm tra trạng thái đơn hàng, Anh/chị vui
+        lòng:</span><span style="margin-top:25px;float:left"><span style="padding:14px 35px;background:#357ebd"><a href="{{URL_FRONTEND}}" style="font-size:16px;text-decoration:none;color:#fff" target="_blank" data-saferedirecturl="{{URL_FRONTEND}}">Đăng nhập vào tài khoản</a></span></span>
+    </p>
+    
+    <div style="clear:both"></div>
+    <p style="margin:30px 0">Nếu Anh/chị có bất kỳ câu hỏi nào, xin liên hệ với chúng tôi tại <a href="mailto:nguyenlc.smile@gmail.com" style="color:#357ebd" target="_blank">nguyenlc.smile@gmail.com</a></p>
+    <p style="text-align:right"><i>Trân trọng,</i></p>
+    <p style="text-align:right"><strong>Ban quản trị cửa hàng</strong></p>
+  </div>
+</div><img src="https://ci3.googleusercontent.com/proxy/mRyccTNipDbTpbqMCoWGgI6esBwEPnSSJ5qF4Z4s_jgWtxWO6qimt8Gj3DYUAglIhJ_tNdo26StdRLgwUCBwtmiuLmG7EUrirJ7GQEvN9lF_EhspZdrr6N8eRvwWjo9Tkqy0Q-TLo1gexI-sawzfOETL2lmeI-Ec_rLz6ZuIirJBskY_OsjuXzJf0gSlAXmAXgWGu6PooEkNmq7tBNLr8-C_A3ugCvroWBIRy5vC7bpp1OfLoR8ZimziV4Nqpjf6lgo9eiMNUovgxK-_RW0moasmgw4XeRAYe81vWvVcF7dcUWeTx88UGgJw2JQCwV3wYHK9m9nMhw0ROOMhX8q0FAOPnIj2N1FG5pZNJXRrv-AP5mmKp1waO_qka25uLb7-vSgZQ9FmMPm9FTOa7Bi-mjC87Bp8vIhNlcWtDw=s0-d-e1-ft#https://u670255.ct.sendgrid.net/wf/open?upn=aY2iW-2FBw-2BgqawmLlRcvH8KOIlRqB2Q-2Bgjqsk4lxcv-2Fn7sGGltqLsYaJOnLZg8sCofzBmVU8if7ZOcPT5vqFgGzhTRAgZM-2FT5FCcKgVuEGjHgIQ0uP7yavauPMmBRT6pFdixV02YgNRT03IpDlV6nHETj7cf4zj8lYT39EqtBtS6YAc4340dcTOGmOh-2BftWX5bU5cKyjCbnb530Td6Gs-2BxmN9uuaOXAt4xzSbbFTuO9s-3D" alt="" width="1" height="1" border="0" style="height:1px!important;width:1px!important;border-width:0!important;margin-top:0!important;margin-bottom:0!important;margin-right:0!important;margin-left:0!important;padding-top:0!important;padding-bottom:0!important;padding-right:0!important;padding-left:0!important" class="CToWUd" data-bit="iit"><div class="yj6qo"></div><div class="adL">
+</div></div>
+    
+</body>
+</html>

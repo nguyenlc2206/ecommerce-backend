@@ -40,15 +40,22 @@ export class DiscountServiceImpl<Entity extends AccountRequest> implements Disco
     /** @todo: get discount */
     private handleGetDiscount = async (req: AccountRequest): Promise<Either<CouponModel, AppError>> => {
         const coupon = await this.couponRepo.getDiscountByCode(req?.body?.codes);
+        // check code active
+        if (coupon?.isDeleted) return failure(new AppError('Code is not active!', 400));
         // check code is used
         if (coupon.accountIdExpires?.includes(req?.accountId!)) return failure(new AppError('Code is used!', 400));
+        // check coupon expires
+        if (new Date(coupon?.endDate!) < new Date(Date.now())) return failure(new AppError('Code is expires!', 400));
 
         const _init = new CouponModel();
         const result = _init.fromCouponModel(coupon);
 
+        // check code wrong
         if (coupon?.type === 'personal' && result?.account?.id !== req?.accountId) {
             return failure(new AppError('Code is wrong!', 400));
         }
+        // check code is use
+        if (coupon?.isDeleted) return failure(new AppError('Code is used!', 400));
 
         return success(coupon);
     };

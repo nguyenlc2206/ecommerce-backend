@@ -9,13 +9,10 @@ export class CategoryModel {
     isDeleted?: boolean;
     createdAt?: Date;
     updatedAt?: Date;
-    deletedAt?: Date;
+    deletedAt?: Date | null;
     products: Array<any>;
 
     fromCategoryModel(category: CategoryModel) {
-        if (category?.isDeleted) {
-            return {} as CategoryModel;
-        }
         return {
             id: category?.id,
             image: category?.image,

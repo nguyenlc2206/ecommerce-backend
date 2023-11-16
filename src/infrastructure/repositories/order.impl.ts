@@ -21,7 +21,10 @@ export class OrderRepositoryImpl<T extends OrderModel> implements OrderRepositor
 
     /** overiding getById method */
     async getById(id: string): Promise<T> {
-        const result = await OrderEntity.findById(id);
+        const popObj = {
+            path: 'accountId'
+        };
+        const result = await OrderEntity.findById(id).populate(popObj);
         return result as T;
     }
 
@@ -37,7 +40,10 @@ export class OrderRepositoryImpl<T extends OrderModel> implements OrderRepositor
 
     /** overiding getAll method */
     async getAll(): Promise<T[]> {
-        const result = await OrderEntity.find();
+        const popObj = {
+            path: 'accountId'
+        };
+        const result = await OrderEntity.find().populate(popObj);
         return result as T[];
     }
 

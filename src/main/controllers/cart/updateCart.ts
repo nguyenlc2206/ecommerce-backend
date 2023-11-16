@@ -26,7 +26,6 @@ export class UpdateProductCartController {
     /** execute method */
     execute = catchAsync(async (req: AccountRequest, res: Response, next: NextFunction) => {
         // * validations fields
-
         // * execute update product services
         const response = await this.updateCartService.execute(req);
         if (response.isFailure()) return next(response.error);

@@ -77,4 +77,32 @@ export class ProductSizeRepositoryImpl<T extends ProductSizeModel> implements Pr
         const result = await ProductSizeEntity.find(entity?.filter).populate(popObj);
         return result as T[];
     }
+
+    /** overiding getById method */
+    async getById(id: string): Promise<T> {
+        const popObj = {
+            path: 'productId'
+        };
+        const result = await ProductSizeEntity.findById(id).populate(popObj);
+        return result as T;
+    }
+
+    /** overding sort method */
+    async sort(): Promise<T[]> {
+        const pageNumber = 1;
+        const pageSize = 10;
+        const popObj = {
+            path: 'productId',
+            populate: {
+                path: 'categoryId'
+            }
+        };
+        const appointments = await ProductSizeEntity.aggregate([
+            { $sort: { discount: -1 } },
+            { $skip: (pageNumber - 1) * pageSize },
+            { $limit: pageSize }
+        ]);
+        const result = await ProductSizeEntity.populate(appointments, popObj);
+        return result as T[];
+    }
 }

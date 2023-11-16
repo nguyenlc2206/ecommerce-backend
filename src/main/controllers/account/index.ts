@@ -11,6 +11,7 @@ import { GetAllAccountController } from '@ecommerce-backend/src/main/controllers
 import { DeleteAccountController } from '@ecommerce-backend/src/main/controllers/account/delete.controller';
 import { UpdateAccountController } from '@ecommerce-backend/src/main/controllers/account/update.controller';
 import { GetAccountByIdController } from '@ecommerce-backend/src/main/controllers/account/getById.controller';
+import { ActiveAccountController } from '@ecommerce-backend/src/main/controllers/account/active.controller';
 
 // ==============================||  ACCOUNT CONTROLLER ||============================== //
 
@@ -58,6 +59,12 @@ export class AccountController {
     // * delete account
     delete = async (req: Request, res: Response, next: NextFunction) => {
         const _init = new DeleteAccountController();
+        return _init.execute(req, res, next);
+    };
+
+    // * active account
+    active = async (req: Request, res: Response, next: NextFunction) => {
+        const _init = new ActiveAccountController();
         return _init.execute(req, res, next);
     };
 }

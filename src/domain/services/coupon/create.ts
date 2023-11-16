@@ -92,7 +92,11 @@ export class CreateCouponServiceImpl<Entity extends AccountRequest> implements C
                 return failure(new AppError('Something wrong from accountId!', 400));
         }
         // * check time
-        if (new Date(entity?.body?.startDate) > new Date(entity?.body?.endDate)) {
+        if (
+            new Date(entity?.body?.startDate) > new Date(entity?.body?.endDate) ||
+            new Date(entity?.body?.startDate) < new Date(Date.now()) ||
+            new Date(entity?.body?.endDate) < new Date(Date.now())
+        ) {
             return failure(new AppError('Something wrong from date!', 400));
         }
         /** save coupon */

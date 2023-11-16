@@ -12,6 +12,8 @@ import { QueryProductsController } from '@ecommerce-backend/src/main/controllers
 import { GetAllSizeProductController } from '@ecommerce-backend/src/main/controllers/product/getAllSize.controller';
 import { CreateProductSizeController } from '@ecommerce-backend/src/main/controllers/product/createSize.controller';
 import { FilterProductsController } from '@ecommerce-backend/src/main/controllers/product/filter.controller';
+import { ActiveProductController } from '@ecommerce-backend/src/main/controllers/product/active.controller';
+import { SortProductController } from '@ecommerce-backend/src/main/controllers/product/sort.cotroller';
 
 // ==============================||  PRODUCT CONTROLLER ||============================== //
 @Service()
@@ -70,6 +72,18 @@ export class ProductController {
     // * create size
     createSize = async (req: Request, res: Response, next: NextFunction) => {
         const _init = new CreateProductSizeController();
+        return _init.execute(req, res, next);
+    };
+
+    // * active account
+    active = async (req: Request, res: Response, next: NextFunction) => {
+        const _init = new ActiveProductController();
+        return _init.execute(req, res, next);
+    };
+
+    // * active account
+    sort = async (req: Request, res: Response, next: NextFunction) => {
+        const _init = new SortProductController();
         return _init.execute(req, res, next);
     };
 }

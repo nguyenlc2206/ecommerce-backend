@@ -63,7 +63,7 @@ import { OTPRepositoryImpl } from '@ecommerce-backend/src/infrastructure/reposit
 import { TokenRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/token.impl';
 import { ProductRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/products/product.impl';
 import { ProductSizeRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/products/size.impl';
-import { OrderRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/order';
+import { OrderRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/order.impl';
 import { UpdateOrderServiceImpl } from '@ecommerce-backend/src/domain/services/order/update';
 import { CouponRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/coupon.impl';
 import { CreateProductSizeServiceImpl } from '@ecommerce-backend/src/domain/services/product/createSize';
@@ -75,6 +75,15 @@ import { CreateProductCartServiceImpl } from '@ecommerce-backend/src/domain/serv
 import { GetProductCartByAccountIdServiceImpl } from '@ecommerce-backend/src/domain/services/cart/getByAccountId';
 import { UpdateProductCardServiceImpl } from '@ecommerce-backend/src/domain/services/cart/update';
 import { DeleteProductCartServiceImpl } from '@ecommerce-backend/src/domain/services/cart/delete';
+
+// import payment
+import { PaymentStripeServiceImpl } from '@ecommerce-backend/src/domain/services/payment/stripe';
+import { ChangePasswordAdminServiceImpl } from '@ecommerce-backend/src/domain/services/authentication/changePasswordAdmin';
+import { ActiveAccountServiceImpl } from '@ecommerce-backend/src/domain/services/account/active';
+import { ActiveCategoryServiceImpl } from '@ecommerce-backend/src/domain/services/category/active';
+import { ActiveProductServiceImpl } from '@ecommerce-backend/src/domain/services/product/active';
+import { ActiveCouponServiceImpl } from '@ecommerce-backend/src/domain/services/coupon/active';
+import { SortProductServiceImpl } from '@ecommerce-backend/src/domain/services/product/sort';
 
 // ==============================||  INJECTTION INIT ||============================== //
 
@@ -106,11 +115,13 @@ const InjectionInit = catchAsync(async () => {
     Container.set(DeleteAccountServiceImpl, new DeleteAccountServiceImpl());
     Container.set(UpdateAccountServiceImpl, new UpdateAccountServiceImpl());
     Container.set(GetAccountByIdServiceImpl, new GetAccountByIdServiceImpl());
+    Container.set(ActiveAccountServiceImpl, new ActiveAccountServiceImpl());
 
     // * define authentication services
     Container.set(LoginServiceImpl, new LoginServiceImpl());
     Container.set(ProtectedServiceImpl, new ProtectedServiceImpl());
     Container.set(ChangePasswordServiceImpl, new ChangePasswordServiceImpl());
+    Container.set(ChangePasswordAdminServiceImpl, new ChangePasswordAdminServiceImpl());
     Container.set(ForgotPasswordServiceImpl, new ForgotPasswordServiceImpl());
     Container.set(LogoutServiceImpl, new LogoutServiceImpl());
 
@@ -124,6 +135,7 @@ const InjectionInit = catchAsync(async () => {
     Container.set(DeleteCategoryServiceImpl, new DeleteCategoryServiceImpl());
     Container.set(GetAllCategoryServiceImpl, new GetAllCategoryServiceImpl());
     Container.set(GetCategoryByIdServiceImpl, new GetCategoryByIdServiceImpl());
+    Container.set(ActiveCategoryServiceImpl, new ActiveCategoryServiceImpl());
 
     // * define product services
     Container.set(CreateProductServiceImpl, new CreateProductServiceImpl());
@@ -139,6 +151,8 @@ const InjectionInit = catchAsync(async () => {
     Container.set(GetProductCartByAccountIdServiceImpl, new GetProductCartByAccountIdServiceImpl());
     Container.set(UpdateProductCardServiceImpl, new UpdateProductCardServiceImpl());
     Container.set(DeleteProductCartServiceImpl, new DeleteProductCartServiceImpl());
+    Container.set(ActiveProductServiceImpl, new ActiveProductServiceImpl());
+    Container.set(SortProductServiceImpl, new SortProductServiceImpl());
 
     // * define order services
     Container.set(CreateOrderServiceImpl, new CreateOrderServiceImpl());
@@ -154,6 +168,7 @@ const InjectionInit = catchAsync(async () => {
     Container.set(GetAllCouponServiceImpl, new GetAllCouponServiceImpl());
     Container.set(DeleteCouponServiceImpl, new DeleteCouponServiceImpl());
     Container.set(UpdateCouponServiceImpl, new UpdateCouponServiceImpl());
+    Container.set(ActiveCouponServiceImpl, new ActiveCouponServiceImpl());
 
     /** @todo: define store, repository */
     // * define account repository
@@ -168,6 +183,9 @@ const InjectionInit = catchAsync(async () => {
     Container.set(ProductRepositoryImpl, new ProductRepositoryImpl());
     Container.set(ProductSizeRepositoryImpl, new ProductSizeRepositoryImpl());
     Container.set(ProductCartRepositoryImpl, new ProductCartRepositoryImpl());
+
+    // * payment
+    Container.set(PaymentStripeServiceImpl, new PaymentStripeServiceImpl());
 });
 
 export default InjectionInit;

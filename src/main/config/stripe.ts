@@ -7,7 +7,6 @@ import Container from 'typedi';
 import { UpdateOrderServiceImpl } from '@ecommerce-backend/src/domain/services/order/update';
 import { OrderModel } from '@ecommerce-backend/src/domain/models/Order';
 import { UpdateCouponServiceImpl } from '@ecommerce-backend/src/domain/services/coupon/update';
-import { CouponModel } from '@ecommerce-backend/src/domain/models/Coupon';
 
 // This is your Stripe CLI webhook secret for testing your endpoint locally.
 const endpoint_secret = 'whsec_e72203a1ae04642e4cf4c6d63e86fd4826ea05042413774baa4f08764dc3c72d';
@@ -32,12 +31,13 @@ const StripeWebhook = (app: Express): void => {
                 res.status(400).send(`Webhook Error: ${err.message}`);
                 return;
             }
+            console.log('>>>Check event type:', event.type);
             // Handle the event
             switch (event.type) {
                 case 'checkout.session.completed':
                     //update the order
                     const session = event.data.object;
-                    const { orderId, accountId, couponId, typeCoupon } = session.metadata!;
+                    const { orderId, accountId, couponId } = session.metadata!;
 
                     /** @todo: update order */
                     const dataUpdateOrder = {
@@ -48,14 +48,6 @@ const StripeWebhook = (app: Express): void => {
                         currency: session.currency
                     } as OrderModel;
                     const responseUpdateOrder = updateOrderService.execute(dataUpdateOrder);
-
-                    /** @todo: update coupon */
-                    const dataUpdateCoupon = {
-                        id: JSON.parse(couponId),
-                        accountId: JSON.parse(accountId),
-                        type: JSON.parse(typeCoupon)
-                    } as CouponModel;
-                    const responseUpdateCoupon = updateCouponService.execute(dataUpdateCoupon);
                     // Then define and call a function to handle the event payment_intent.succeeded
                     break;
                 // ... handle other event types

@@ -13,6 +13,8 @@ const instanceAuth = Container.get(AuthenticationController);
 
 /** @todo: init routes */
 export const CouponRoutes = (router: Router) => {
+    /** active category */
+    router.get('/coupon/active/:id', instanceAuth.protect, middlewareRoleRestrictTo(['admin']), instanceCoupon.active);
     // * create coupon
     router.post('/coupon', instanceAuth.protect, middlewareRoleRestrictTo(['admin']), instanceCoupon.create);
     // * discount coupon

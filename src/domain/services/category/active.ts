@@ -1,0 +1,52 @@
+// * import libs
+import 'reflect-metadata';
+import { Container, Service } from 'typedi';
+
+// * import projects
+import AppError from '@ecommerce-backend/src/shared/common/appError';
+import { Either, failure, success } from '@ecommerce-backend/src/shared/common/either';
+import { AccountModel } from '@ecommerce-backend/src/domain/models/Account';
+
+import { AccountRequest } from '@ecommerce-backend/src/shared/types';
+import { CategoryRepository } from '@ecommerce-backend/src/domain/repositories/category';
+import { CategoryModel } from '@ecommerce-backend/src/domain/models/Category';
+import { CategoryRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/category';
+
+// ==============================||  ACTIVE SERVICES IMPLEMENT ||============================== //
+
+export interface ActiveCategoryService<Entity> {
+    execute(entity: Entity): Promise<Either<string, AppError>>;
+}
+
+@Service()
+export class ActiveCategoryServiceImpl<Entity extends AccountRequest> implements ActiveCategoryService<Entity> {
+    protected categoryRepo: CategoryRepository<CategoryModel>;
+
+    // * constructor
+    constructor() {
+        this.categoryRepo = Container.get(CategoryRepositoryImpl);
+    }
+
+    /** overiding execute method */
+    async execute(entity: Entity): Promise<Either<string, AppError>> {
+        /** handle get category by id */
+        const resultGet = await this.hanleGetCategory(entity?.params?.id);
+        if (resultGet.isFailure()) return failure(resultGet.error);
+
+        /** get all account by id */
+        if (resultGet.data?.isDeleted) {
+            const response = await this.categoryRepo.update(entity?.params?.id, {
+                isDeleted: false,
+                deletedAt: null
+            } as CategoryModel);
+        }
+        return success('okie');
+    }
+
+    /** handle get category by id */
+    private hanleGetCategory = async (id: string): Promise<Either<CategoryModel | undefined, AppError>> => {
+        const response = await this.categoryRepo.getById(id);
+        if (!response) return failure(new AppError('Not have category!', 400));
+        return success(response);
+    };
+}

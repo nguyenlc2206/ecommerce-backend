@@ -40,14 +40,15 @@ export class ProductSizeModel {
         const _init = new ProductModel();
         productModel?.map((item: KeyedObject) => {
             products.push({
-                id: item?.id,
+                id: item?.id ? item?.id : item?._id,
                 size: item?.size,
                 price: item?.price,
                 discount: item?.discount,
                 color: item?.color,
                 totalQty: item?.totalQty,
                 totalSold: item?.totalSold,
-                isDeleted: item?.isDeleted
+                isDeleted: item?.isDeleted,
+                product: _init.fromProductModel(item?.productId)
             } as ProductSizeModel);
         });
         return products;

@@ -125,7 +125,10 @@ export class CreateProductServiceImpl<Entity extends AccountRequest> implements 
         const productSize: Array<ProductSizeModel> = [];
         entity?.body?.sizes.map((item: string) => {
             const _item = JSON.parse(item);
-            productSize.push({ ..._item, productId: id } as ProductSizeModel);
+            productSize.push({
+                ..._item,
+                productId: id
+            } as ProductSizeModel);
         });
         const resultSize = await this.productSizeRepo.insertMary(productSize);
         return success(resultSize);
