@@ -10,7 +10,7 @@ const main = catchAsync(async (req: Request, res: Response, next: NextFunction) 
     databaseConnection(req, res, next);
 
     /** create server */
-    const PORT: number = Number(process.env.PORT) || 3000;
+    const PORT: number = Number(process.env.PORT) || 1337;
 
     /** init app */
     const app = express();
