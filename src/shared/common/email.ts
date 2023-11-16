@@ -45,6 +45,21 @@ export class Email<T extends KeyedObject> implements EmailMethods<T> {
         return info;
     }
 
+    /** overding sendEmailSupport method */
+    async sendEmailSupport(entity: T): Promise<SMTPTransport.SentMessageInfo> {
+        const template = fs.readFileSync(`${process.cwd()}/src/shared/templates/support.html`, 'utf8');
+        const compiledTemplate = handlebars.compile(template);
+        const html = compiledTemplate(entity);
+
+        const info = await this.createNewTransport().sendMail({
+            from: `${entity?.email}`, // sender address
+            to: `"Ecommerce 👻" <ecommerce.app@example.com>`, // list of receivers
+            subject: 'OTP FOR CHANGE PASSWORD ✔', // Subject line
+            html: `${html}` // html body
+        });
+        return info;
+    }
+
     /** overding sendEmailConfirmOrder method */
     async sendEmailConfirmOrder(entity: T): Promise<SMTPTransport.SentMessageInfo> {
         const template = fs.readFileSync(`${process.cwd()}/src/shared/templates/confirmOrder.html`, 'utf8');
@@ -73,7 +88,7 @@ export class Email<T extends KeyedObject> implements EmailMethods<T> {
         let coupon: number = 0;
         handlebars.registerHelper('cacularTotalCoupon', function (items) {
             items.map((item: ProductSizeModel) => {
-                coupon = coupon + item?.price! * (entity?.dicount / 100) * item?.qty!;
+                coupon = coupon + item?.price! * (entity?.dicount || 0 / 100) * item?.qty!;
             });
             return coupon;
         });

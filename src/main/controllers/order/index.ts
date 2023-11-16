@@ -8,6 +8,7 @@ import { DeleteOrderController } from '@ecommerce-backend/src/main/controllers/o
 import { GetAllOrderController } from '@ecommerce-backend/src/main/controllers/order/getAll.controller';
 import { GetOrderByIdController } from '@ecommerce-backend/src/main/controllers/order/getById.controller';
 import { GetPaginationOrderController } from '@ecommerce-backend/src/main/controllers/order/getPagination.controller';
+import { GetOrderByAccountIdController } from '@ecommerce-backend/src/main/controllers/order/getByAccountId';
 
 // ==============================||  ORDER CONTROLLER ||============================== //
 @Service()
@@ -33,15 +34,21 @@ export class OrderController {
         return _init.execute(req, res, next);
     };
 
-    // * get account by id
+    // * get by id
     getById = async (req: Request, res: Response, next: NextFunction) => {
         const _init = new GetOrderByIdController();
         return _init.execute(req, res, next);
     };
 
-    // * get account by id
+    // * get by id
     getPaginate = async (req: Request, res: Response, next: NextFunction) => {
         const _init = new GetPaginationOrderController();
+        return _init.execute(req, res, next);
+    };
+
+    // * get by account id
+    getOrderMe = async (req: Request, res: Response, next: NextFunction) => {
+        const _init = new GetOrderByAccountIdController();
         return _init.execute(req, res, next);
     };
 }

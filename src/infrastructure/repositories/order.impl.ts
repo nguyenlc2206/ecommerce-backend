@@ -64,4 +64,13 @@ export class OrderRepositoryImpl<T extends OrderModel> implements OrderRepositor
         const result = await OrderEntity.find().skip(startIdx).limit(limit);
         return result as T[];
     }
+
+    /** overiding getByAccountId method */
+    async getByAccountId(id: string): Promise<T[]> {
+        const popObj = {
+            path: 'accountId'
+        };
+        const result = await OrderEntity.find({ accountId: id }).populate(popObj);
+        return result as T[];
+    }
 }

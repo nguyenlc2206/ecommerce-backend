@@ -18,6 +18,7 @@ import { ProductController } from '@ecommerce-backend/src/main/controllers/produ
 import { OrderController } from '@ecommerce-backend/src/main/controllers/order';
 import { CouponController } from '@ecommerce-backend/src/main/controllers/coupon';
 import { ProductCartController } from '@ecommerce-backend/src/main/controllers/cart';
+import { EmailController } from '@ecommerce-backend/src/main/controllers/email';
 
 // * import services
 import { LoginServiceImpl } from '@ecommerce-backend/src/domain/services/authentication/login';
@@ -84,6 +85,7 @@ import { ActiveCategoryServiceImpl } from '@ecommerce-backend/src/domain/service
 import { ActiveProductServiceImpl } from '@ecommerce-backend/src/domain/services/product/active';
 import { ActiveCouponServiceImpl } from '@ecommerce-backend/src/domain/services/coupon/active';
 import { SortProductServiceImpl } from '@ecommerce-backend/src/domain/services/product/sort';
+import { GetOrderByAccountIdServiceImpl } from '@ecommerce-backend/src/domain/services/order/getByAccountId';
 
 // ==============================||  INJECTTION INIT ||============================== //
 
@@ -104,6 +106,7 @@ const InjectionInit = catchAsync(async () => {
     Container.set(ProductCartController, new ProductCartController());
     Container.set(OrderController, new OrderController());
     Container.set(CouponController, new CouponController());
+    Container.set(EmailController, new EmailController());
 
     /** @todo: define services */
     // * define account services
@@ -161,6 +164,7 @@ const InjectionInit = catchAsync(async () => {
     Container.set(GetOrderByIdServiceImpl, new GetOrderByIdServiceImpl());
     Container.set(UpdateOrderServiceImpl, new UpdateOrderServiceImpl());
     Container.set(GetPaginateOrderServiceImpl, new GetPaginateOrderServiceImpl());
+    Container.set(GetOrderByAccountIdServiceImpl, new GetOrderByAccountIdServiceImpl());
 
     // * define coupon services
     Container.set(CreateCouponServiceImpl, new CreateCouponServiceImpl());

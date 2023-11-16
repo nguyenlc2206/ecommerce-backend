@@ -9,6 +9,7 @@ import { CategoryRoutes } from '@ecommerce-backend/src/main/routes/category';
 import { ProductRoutes } from '@ecommerce-backend/src/main/routes/product';
 import { OrderRoutes } from '@ecommerce-backend/src/main/routes/order';
 import { CouponRoutes } from '@ecommerce-backend/src/main/routes/coupon';
+import { EmailRoutes } from '@ecommerce-backend/src/main/routes/email';
 
 /** @todo: setup configs routes express */
 
@@ -20,7 +21,8 @@ const ExpressRoutes = (app: Express): void => {
         CategoryRoutes,
         ProductRoutes,
         OrderRoutes,
-        CouponRoutes
+        CouponRoutes,
+        EmailRoutes
     ];
     /** init router */
     const router = Router();

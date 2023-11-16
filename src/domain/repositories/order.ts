@@ -7,4 +7,5 @@ export interface OrderRepository<T> {
     update(id?: string, entity?: T): Promise<T>;
     getTotal(): Promise<number>;
     getPaginate(startIdx: number, limit: number): Promise<T[]>;
+    getByAccountId(id: string): Promise<T[]>;
 }

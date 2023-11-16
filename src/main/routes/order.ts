@@ -21,6 +21,8 @@ export const OrderRoutes = (router: Router) => {
     router.get('/order/getAll', instanceAuth.protect, middlewareRoleRestrictTo(['admin']), instanceOrder.getAll);
     /** get account by id */
     router.get('/order/:id', instanceAuth.protect, instanceOrder.getById);
+    /** get account by id */
+    router.get('/order-me', instanceAuth.protect, instanceOrder.getOrderMe);
     /** get paginate method*/
     router.get('/order?:page?:limit', instanceAuth.protect, instanceOrder.getPaginate);
 };
