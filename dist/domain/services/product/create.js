@@ -92,12 +92,22 @@ let CreateProductServiceImpl = class CreateProductServiceImpl {
             return (0, either_1.failure)(images.error);
         /** processing sizes */
         const sizes = [];
+        const colors = [];
         entity?.body?.sizes.map((item) => {
             const _item = JSON.parse(item);
-            sizes.push(_item?.size);
+            if (!sizes.includes(_item?.size))
+                sizes.push(_item?.size);
+            if (!colors.includes(_item?.color))
+                colors.push(_item?.color);
         });
         /** handle save product */
-        const dataCreate = { ...entity?.body, sizes: sizes, images: images.data, accountId: entity?.account?.id };
+        const dataCreate = {
+            ...entity?.body,
+            sizes: sizes,
+            colors: colors,
+            images: images.data,
+            accountId: entity?.account?.id
+        };
         // const dataCreate = { ...entity?.body, sizes: sizes, accountId: entity?.account?.id };
         const response = await this.productRepo.create(dataCreate);
         const _init = new Product_1.ProductModel();
@@ -125,7 +135,10 @@ let CreateProductServiceImpl = class CreateProductServiceImpl {
         const productSize = [];
         entity?.body?.sizes.map((item) => {
             const _item = JSON.parse(item);
-            productSize.push({ ..._item, productId: id });
+            productSize.push({
+                ..._item,
+                productId: id
+            });
         });
         const resultSize = await this.productSizeRepo.insertMary(productSize);
         return (0, either_1.success)(resultSize);

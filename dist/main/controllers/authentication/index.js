@@ -18,6 +18,7 @@ const protect_controller_1 = require("../../../main/controllers/authentication/p
 const changePassword_controller_1 = require("../../../main/controllers/authentication/changePassword.controller");
 const forgotPassword_controller_1 = require("../../../main/controllers/authentication/forgotPassword.controller");
 const logout_controller_1 = require("../../../main/controllers/authentication/logout.controller");
+const changePasswordAdmin_controller_1 = require("../../../main/controllers/authentication/changePasswordAdmin.controller");
 // ==============================||  AUTHENTICATION CONTROLLER ||============================== //
 let AuthenticationController = class AuthenticationController {
     /** constructor */
@@ -40,6 +41,11 @@ let AuthenticationController = class AuthenticationController {
     /** change password router */
     changePassword = async (req, res, next) => {
         const _init = new changePassword_controller_1.ChangePasswordController();
+        return _init.execute(req, res, next);
+    };
+    /** change password router */
+    changePasswordAdmin = async (req, res, next) => {
+        const _init = new changePasswordAdmin_controller_1.ChangePasswordAdminController();
         return _init.execute(req, res, next);
     };
     /** forgot password router */

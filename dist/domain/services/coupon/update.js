@@ -33,15 +33,23 @@ let UpdateCouponServiceImpl = class UpdateCouponServiceImpl {
         if (resultGet.isFailure())
             return (0, either_1.failure)(resultGet.error);
         const { data: coupon } = resultGet;
-        const arrayAccountId = coupon?.accountIdExpires;
-        arrayAccountId?.push(entity?.accountId);
-        /** handle update coupon */
-        const resultUpdate = await this.handelUpdateCoupon(entity?.id, {
-            accountIdExpires: arrayAccountId
-        });
-        if (resultUpdate.isFailure())
-            return (0, either_1.failure)(resultUpdate.error);
-        return (0, either_1.success)(resultUpdate.data);
+        let response = {};
+        if (coupon?.type === 'all') {
+            const arrayAccountId = coupon?.accountIdExpires;
+            arrayAccountId?.push(entity?.accountId);
+            /** handle update coupon */
+            const resultUpdate = await this.handelUpdateCoupon(entity?.id, {
+                accountIdExpires: arrayAccountId
+            });
+            if (resultUpdate.isFailure())
+                return (0, either_1.failure)(resultUpdate.error);
+            response = resultUpdate.data;
+        }
+        else {
+            const resultUpdate = await this.couponRepo.delete(entity?.id);
+            return (0, either_1.success)({});
+        }
+        return (0, either_1.success)(response);
     }
     // * get coupon from database
     handleGetCoupon = async (id) => {

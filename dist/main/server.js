@@ -12,7 +12,7 @@ const main = (0, catchAsync_1.default)(async (req, res, next) => {
     /** connection database */
     (0, db_config_1.default)(req, res, next);
     /** create server */
-    const PORT = Number(process.env.PORT) || 3000;
+    const PORT = Number(process.env.PORT) || 1337;
     /** init app */
     const app = (0, express_1.default)();
     const Express = new express_2.ExpressConfig(app, PORT);

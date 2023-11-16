@@ -17,7 +17,7 @@ const typedi_1 = require("typedi");
 // * import projects
 const catchAsync_1 = __importDefault(require("../../../shared/common/catchAsync"));
 const getPaginate_1 = require("../../../domain/services/order/getPaginate");
-const order_1 = require("../../../infrastructure/repositories/order");
+const order_impl_1 = require("../../../infrastructure/repositories/order.impl");
 // ==============================||  GET PAGINATION ORDER CONTROLLER ||============================== //
 let GetPaginationOrderController = class GetPaginationOrderController {
     /** init services */
@@ -26,7 +26,7 @@ let GetPaginationOrderController = class GetPaginationOrderController {
     // * constructor
     constructor() {
         this.getPaginateService = typedi_1.Container.get(getPaginate_1.GetPaginateOrderServiceImpl);
-        this.orderRepo = typedi_1.Container.get(order_1.OrderRepositoryImpl);
+        this.orderRepo = typedi_1.Container.get(order_impl_1.OrderRepositoryImpl);
     }
     /** execute method */
     execute = (0, catchAsync_1.default)(async (req, res, next) => {

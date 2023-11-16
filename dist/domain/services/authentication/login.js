@@ -66,6 +66,8 @@ let LoginServiceImpl = class LoginServiceImpl {
         const response = await this.accountRepo.getByEmail(email);
         if (!response)
             return (0, either_1.failure)(new appError_1.default('Email is not exists!', 400));
+        if (response?.isDeleted)
+            return (0, either_1.failure)(new appError_1.default('Account is block. Please contact admin to unlock account!', 400));
         return (0, either_1.success)(response);
     };
     /** compare password */

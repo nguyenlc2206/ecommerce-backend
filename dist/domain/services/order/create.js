@@ -39,29 +39,37 @@ exports.CreateOrderServiceImpl = void 0;
 // * import lib
 const typedi_1 = require("typedi");
 const _ = __importStar(require("lodash"));
-const stripe_1 = __importDefault(require("stripe"));
 // * import projects
 const appError_1 = __importDefault(require("../../../shared/common/appError"));
 const either_1 = require("../../../shared/common/either");
 const account_impl_1 = require("../../../infrastructure/repositories/account.impl");
-const order_1 = require("../../../infrastructure/repositories/order");
+const Order_1 = require("../../../domain/models/Order");
+const order_impl_1 = require("../../../infrastructure/repositories/order.impl");
 const size_impl_1 = require("../../../infrastructure/repositories/products/size.impl");
-const env_1 = __importDefault(require("../../../main/config/env"));
 const discount_1 = require("../../../domain/services/coupon/discount");
+// import payment
+const stripe_1 = require("../../../domain/services/payment/stripe");
+const coupon_impl_1 = require("../../../infrastructure/repositories/coupon.impl");
+const email_1 = require("../../../shared/common/email");
 let CreateOrderServiceImpl = class CreateOrderServiceImpl {
     /** init repo */
     accountRepo;
     orderRepo;
     productSizeRepo;
     discountService;
-    //stripe instance
-    stripe = new stripe_1.default(env_1.default.stripeSecretKey);
+    couponRepo;
+    /** init stripe payment */
+    paymentStripe;
+    emailService;
     /** constructor */
     constructor() {
         this.accountRepo = typedi_1.Container.get(account_impl_1.AccountRepositoryImpl);
-        this.orderRepo = typedi_1.Container.get(order_1.OrderRepositoryImpl);
+        this.orderRepo = typedi_1.Container.get(order_impl_1.OrderRepositoryImpl);
         this.productSizeRepo = typedi_1.Container.get(size_impl_1.ProductSizeRepositoryImpl);
         this.discountService = typedi_1.Container.get(discount_1.DiscountServiceImpl);
+        this.paymentStripe = typedi_1.Container.get(stripe_1.PaymentStripeServiceImpl);
+        this.couponRepo = typedi_1.Container.get(coupon_impl_1.CouponRepositoryImpl);
+        this.emailService = typedi_1.Container.get(email_1.Email);
     }
     /** overiding execute */
     async execute(entity) {
@@ -85,13 +93,26 @@ let CreateOrderServiceImpl = class CreateOrderServiceImpl {
         const resultSave = await this.handleSaveOrder(entity?.accountId, entity?.body);
         if (resultSave.isFailure())
             return (0, either_1.failure)(resultSave.error);
+        const _init = new Order_1.OrderModel();
+        const result = _init.fromOrderModel(resultSave.data);
+        // * handle send email confirm order
+        const resultSendEmail = this.handleSendEmailConfirmOrder(entity, result);
         // * handle update product size
         const resultUpdate = this.handleUpdateProductSize(entity);
-        // * handle create session stripe
-        const resultStripe = await this.handleCreateStripeSession(entity, resultSave.data?.id, coupon);
-        if (resultStripe.isFailure())
-            return (0, either_1.failure)(resultStripe.error);
-        return (0, either_1.success)(resultStripe.data);
+        // handle update coupon
+        const resultCoupon = this.handleUpdateCodeCoupon(entity?.accountId, coupon);
+        // switch case processing payment
+        switch (entity?.body?.paymentCharged?.method) {
+            case 'card': {
+                const resultStripe = await this.paymentStripe.execute(entity, resultSave.data?.id, coupon);
+                if (resultStripe.isFailure())
+                    return (0, either_1.failure)(resultStripe.error);
+                return (0, either_1.success)({ ...resultStripe.data, ...result });
+            }
+            default: {
+                return (0, either_1.success)(result);
+            }
+        }
     }
     /** @todo: check has address */
     handleCheckAddress = async (req) => {
@@ -152,41 +173,34 @@ let CreateOrderServiceImpl = class CreateOrderServiceImpl {
             return (0, either_1.failure)(discount.error);
         return (0, either_1.success)(discount.data);
     };
-    /** @todo: handle convert orderItems to stripe need */
-    handleCreateStripeSession = async (req, orderId, coupon) => {
-        const convertedOrders = req?.body?.orderItems.map((item) => {
-            const _discount = item?.discount ? item?.discount : 0;
-            return {
-                price_data: {
-                    currency: 'usd',
-                    product_data: {
-                        name: item?.name,
-                        description: item?.description
-                    },
-                    unit_amount: _discount + coupon?.discount
-                        ? item?.price * (1 - (_discount + coupon?.discount) / 100)
-                        : item?.price
-                },
-                quantity: item?.qty
-            };
-        });
-        const session = await this.stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
-            customer_email: req?.email,
-            line_items: convertedOrders,
-            metadata: {
-                orderId: JSON.stringify(orderId),
-                accountId: JSON.stringify(req?.accountId),
-                couponId: JSON.stringify(coupon?.id)
-            },
-            mode: 'payment',
-            client_reference_id: orderId,
-            success_url: 'http://localhost:8000/success',
-            cancel_url: 'http://localhost:8000/cancel'
-            // success_url: `${req.protocol}://${req.get('host')}/my-orders`,
-            // cancel_url: 'http://localhost:3000/cancel'
-        });
-        return (0, either_1.success)({ url: session.url });
+    /** @todo: processing code is use */
+    handleUpdateCodeCoupon = async (accountId, coupon) => {
+        const couponFinded = await this.couponRepo.getById(coupon?.id);
+        if (couponFinded?.type === 'personal') {
+            const res = await this.couponRepo.delete(coupon?.id);
+            return (0, either_1.success)(res);
+        }
+        const _arrayAccounts = couponFinded?.accountIdExpires;
+        if (!_arrayAccounts?.includes(accountId))
+            _arrayAccounts?.push(accountId);
+        const res = await this.couponRepo.update(coupon?.id, { accountIdExpires: _arrayAccounts });
+        return (0, either_1.success)(res);
+    };
+    /** hadnle send email confirm order */
+    handleSendEmailConfirmOrder = async (entity, data) => {
+        const dataConfirm = {
+            fullName: entity?.account?.fullName,
+            email: entity?.account?.email,
+            phoneNumber: entity?.account?.phoneNo,
+            paymentType: data?.paymentCharged?.method,
+            orderId: data?.orderNumber,
+            orderDate: data?.createdAt,
+            productItems: data?.orderItems,
+            dicount: entity?.body?.discounts[0]?.value,
+            note: 'Somthing from customer!'
+        };
+        const res = await this.emailService.sendEmailConfirmOrder(dataConfirm);
+        return (0, either_1.success)(true);
     };
 };
 exports.CreateOrderServiceImpl = CreateOrderServiceImpl;

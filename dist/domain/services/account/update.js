@@ -73,7 +73,6 @@ let UpdateAccountServiceImpl = class UpdateAccountServiceImpl {
         }
         /** handle update data */
         _.omit(entity?.body, ['avatar']);
-        console.log({ ...entity?.body, ..._entity });
         const reponse = await this.accountRepo.update(account?.id, {
             ...entity?.body,
             ..._entity

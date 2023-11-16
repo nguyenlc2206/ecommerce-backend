@@ -14,6 +14,8 @@ const instanceCoupon = typedi_1.Container.get(coupon_1.CouponController);
 const instanceAuth = typedi_1.Container.get(authentication_1.AuthenticationController);
 /** @todo: init routes */
 const CouponRoutes = (router) => {
+    /** active category */
+    router.get('/coupon/active/:id', instanceAuth.protect, (0, middleware_1.default)(['admin']), instanceCoupon.active);
     // * create coupon
     router.post('/coupon', instanceAuth.protect, (0, middleware_1.default)(['admin']), instanceCoupon.create);
     // * discount coupon

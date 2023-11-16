@@ -43,15 +43,16 @@ const _ = __importStar(require("lodash"));
 // * import projects
 const either_1 = require("../../../shared/common/either");
 const appError_1 = __importDefault(require("../../../shared/common/appError"));
-const order_1 = require("../../../infrastructure/repositories/order");
+const order_impl_1 = require("../../../infrastructure/repositories/order.impl");
 let UpdateOrderServiceImpl = class UpdateOrderServiceImpl {
     /** init service */
     orderRepo;
     constructor() {
-        this.orderRepo = typedi_1.Container.get(order_1.OrderRepositoryImpl);
+        this.orderRepo = typedi_1.Container.get(order_impl_1.OrderRepositoryImpl);
     }
     /** execute function */
     async execute(entity) {
+        console.log(entity);
         /** get category from database */
         const resultGet = await this.handleGetOrder(entity?.id);
         if (resultGet.isFailure())

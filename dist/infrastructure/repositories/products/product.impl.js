@@ -33,15 +33,16 @@ let ProductRepositoryImpl = class ProductRepositoryImpl {
     /** overiding getById method */
     async getById(id) {
         const popObj = {
-            path: 'categoryId'
-            // select: 'name'
+            path: 'ProductSize'
         };
-        const result = await Product_1.default.findById(id).populate(popObj);
+        const popObjCategory = {
+            path: 'categoryId'
+        };
+        const result = await Product_1.default.findById(id).populate(popObj).populate(popObjCategory);
         return result;
     }
     /** overiding getById method */
     async getByCategoryId(id) {
-        console.log(id);
         const popObj = {
             path: 'categoryId'
             // select: 'name'
@@ -63,7 +64,10 @@ let ProductRepositoryImpl = class ProductRepositoryImpl {
         const popObj = {
             path: 'ProductSize'
         };
-        const result = await Product_1.default.find().populate(popObj);
+        const popObjCategory = {
+            path: 'categoryId'
+        };
+        const result = await Product_1.default.find().populate(popObj).populate(popObjCategory);
         return result;
     }
     /** overiding find method */

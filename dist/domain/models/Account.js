@@ -13,6 +13,7 @@ class AccountModel {
     role;
     createdAt;
     updatedAt;
+    deletedAt;
     accessToken;
     passwordChangedAt;
     OTP;

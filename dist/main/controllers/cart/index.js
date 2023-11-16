@@ -15,6 +15,8 @@ const typedi_1 = require("typedi");
 // import projects
 const create_controller_1 = require("../../../main/controllers/cart/create.controller");
 const getByAccountId_controller_1 = require("../../../main/controllers/cart/getByAccountId.controller");
+const updateCart_1 = require("../../../main/controllers/cart/updateCart");
+const delete_controller_1 = require("./delete.controller");
 // ==============================||  PRODUCT CART CONTROLLER ||============================== //
 let ProductCartController = class ProductCartController {
     /** constructor */
@@ -27,6 +29,16 @@ let ProductCartController = class ProductCartController {
     /** get by account id */
     getByAccountId = async (req, res, next) => {
         const _init = new getByAccountId_controller_1.GetProductCartByAccountIdController();
+        return _init.execute(req, res, next);
+    };
+    // * update cart
+    update = async (req, res, next) => {
+        const _init = new updateCart_1.UpdateProductCartController();
+        return _init.execute(req, res, next);
+    };
+    // * delete cart
+    delete = async (req, res, next) => {
+        const _init = new delete_controller_1.DeleteProductCartController();
         return _init.execute(req, res, next);
     };
 };

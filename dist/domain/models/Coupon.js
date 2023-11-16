@@ -13,6 +13,7 @@ class CouponModel {
     isDeleted;
     createdAt;
     updatedAt;
+    deletedAt;
     account;
     accountIdExpires;
     fromCouponModel(couponModel) {
@@ -30,7 +31,8 @@ class CouponModel {
     fromCouponModelDiscount(couponModel) {
         return {
             id: couponModel?.id,
-            discount: couponModel?.discount
+            discount: couponModel?.discount,
+            code: couponModel?.code
         };
     }
     fromCouponModelGetAll(couponModel) {
@@ -44,6 +46,7 @@ class CouponModel {
                 discount: item?.discount,
                 account: item?.accountId,
                 type: item?.type,
+                accountIdExpires: item?.accountIdExpires,
                 isDeleted: item?.isDeleted
             });
         });

@@ -18,6 +18,7 @@ const delete_controller_1 = require("../../../main/controllers/order/delete.cont
 const getAll_controller_1 = require("../../../main/controllers/order/getAll.controller");
 const getById_controller_1 = require("../../../main/controllers/order/getById.controller");
 const getPagination_controller_1 = require("../../../main/controllers/order/getPagination.controller");
+const getByAccountId_1 = require("../../../main/controllers/order/getByAccountId");
 // ==============================||  ORDER CONTROLLER ||============================== //
 let OrderController = class OrderController {
     /** constructor */
@@ -37,14 +38,19 @@ let OrderController = class OrderController {
         const _init = new getAll_controller_1.GetAllOrderController();
         return _init.execute(req, res, next);
     };
-    // * get account by id
+    // * get by id
     getById = async (req, res, next) => {
         const _init = new getById_controller_1.GetOrderByIdController();
         return _init.execute(req, res, next);
     };
-    // * get account by id
+    // * get by id
     getPaginate = async (req, res, next) => {
         const _init = new getPagination_controller_1.GetPaginationOrderController();
+        return _init.execute(req, res, next);
+    };
+    // * get by account id
+    getOrderMe = async (req, res, next) => {
+        const _init = new getByAccountId_1.GetOrderByAccountIdController();
         return _init.execute(req, res, next);
     };
 };

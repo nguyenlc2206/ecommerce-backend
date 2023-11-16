@@ -41,14 +41,24 @@ let DiscountServiceImpl = class DiscountServiceImpl {
     /** @todo: get discount */
     handleGetDiscount = async (req) => {
         const coupon = await this.couponRepo.getDiscountByCode(req?.body?.codes);
+        // check code active
+        if (coupon?.isDeleted)
+            return (0, either_1.failure)(new appError_1.default('Code is not active!', 400));
         // check code is used
         if (coupon.accountIdExpires?.includes(req?.accountId))
             return (0, either_1.failure)(new appError_1.default('Code is used!', 400));
+        // check coupon expires
+        if (new Date(coupon?.endDate) < new Date(Date.now()))
+            return (0, either_1.failure)(new appError_1.default('Code is expires!', 400));
         const _init = new Coupon_1.CouponModel();
         const result = _init.fromCouponModel(coupon);
+        // check code wrong
         if (coupon?.type === 'personal' && result?.account?.id !== req?.accountId) {
             return (0, either_1.failure)(new appError_1.default('Code is wrong!', 400));
         }
+        // check code is use
+        if (coupon?.isDeleted)
+            return (0, either_1.failure)(new appError_1.default('Code is used!', 400));
         return (0, either_1.success)(coupon);
     };
 };

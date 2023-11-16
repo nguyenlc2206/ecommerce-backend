@@ -6,7 +6,7 @@
     "scripts": {
         "dev": "npx nodemon",
         "build": "tsc && tsc-alias",
-        "start": "node dist/src/main/server.js",
+        "start": "node dist/main/server.js",
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",
         "prettier": "prettier --check .",

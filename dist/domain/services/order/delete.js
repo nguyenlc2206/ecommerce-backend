@@ -19,7 +19,7 @@ const typedi_1 = require("typedi");
 // * import projects
 const appError_1 = __importDefault(require("../../../shared/common/appError"));
 const either_1 = require("../../../shared/common/either");
-const order_1 = require("../../../infrastructure/repositories/order");
+const order_impl_1 = require("../../../infrastructure/repositories/order.impl");
 const size_impl_1 = require("../../../infrastructure/repositories/products/size.impl");
 let DeleteOrderServiceImpl = class DeleteOrderServiceImpl {
     /** init repo */
@@ -27,7 +27,7 @@ let DeleteOrderServiceImpl = class DeleteOrderServiceImpl {
     productSizeRepo;
     // * constructor
     constructor() {
-        this.orderRepo = typedi_1.Container.get(order_1.OrderRepositoryImpl);
+        this.orderRepo = typedi_1.Container.get(order_impl_1.OrderRepositoryImpl);
         this.productSizeRepo = typedi_1.Container.get(size_impl_1.ProductSizeRepositoryImpl);
     }
     /** overiding execute method */

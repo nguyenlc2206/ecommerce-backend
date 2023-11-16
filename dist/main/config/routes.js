@@ -10,6 +10,7 @@ const category_1 = require("../../main/routes/category");
 const product_1 = require("../../main/routes/product");
 const order_1 = require("../../main/routes/order");
 const coupon_1 = require("../../main/routes/coupon");
+const email_1 = require("../../main/routes/email");
 /** @todo: setup configs routes express */
 const ExpressRoutes = (app) => {
     const routes = [
@@ -19,7 +20,8 @@ const ExpressRoutes = (app) => {
         category_1.CategoryRoutes,
         product_1.ProductRoutes,
         order_1.OrderRoutes,
-        coupon_1.CouponRoutes
+        coupon_1.CouponRoutes,
+        email_1.EmailRoutes
     ];
     /** init router */
     const router = (0, express_1.Router)();

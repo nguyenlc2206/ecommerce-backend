@@ -13,9 +13,6 @@ class CategoryModel {
     deletedAt;
     products;
     fromCategoryModel(category) {
-        if (category?.isDeleted) {
-            return {};
-        }
         return {
             id: category?.id,
             image: category?.image,

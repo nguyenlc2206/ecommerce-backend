@@ -44,6 +44,15 @@ let ProductCartRepositoryImpl = class ProductCartRepositoryImpl {
         const result = await Cart_1.default.findOne({ accountId: id });
         return result;
     }
+    /** overiding delete method */
+    async delete(id) {
+        const result = await Cart_1.default.findById(id);
+        if (result) {
+            result.isDeleted = true;
+            result.deletedAt = new Date(Date.now());
+            await result.save();
+        }
+    }
 };
 exports.ProductCartRepositoryImpl = ProductCartRepositoryImpl;
 exports.ProductCartRepositoryImpl = ProductCartRepositoryImpl = __decorate([

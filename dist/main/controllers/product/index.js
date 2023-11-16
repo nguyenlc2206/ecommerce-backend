@@ -22,6 +22,8 @@ const query_controller_1 = require("../../../main/controllers/product/query.cont
 const getAllSize_controller_1 = require("../../../main/controllers/product/getAllSize.controller");
 const createSize_controller_1 = require("../../../main/controllers/product/createSize.controller");
 const filter_controller_1 = require("../../../main/controllers/product/filter.controller");
+const active_controller_1 = require("../../../main/controllers/product/active.controller");
+const sort_cotroller_1 = require("../../../main/controllers/product/sort.cotroller");
 // ==============================||  PRODUCT CONTROLLER ||============================== //
 let ProductController = class ProductController {
     /** constructor */
@@ -69,6 +71,16 @@ let ProductController = class ProductController {
     // * create size
     createSize = async (req, res, next) => {
         const _init = new createSize_controller_1.CreateProductSizeController();
+        return _init.execute(req, res, next);
+    };
+    // * active account
+    active = async (req, res, next) => {
+        const _init = new active_controller_1.ActiveProductController();
+        return _init.execute(req, res, next);
+    };
+    // * active account
+    sort = async (req, res, next) => {
+        const _init = new sort_cotroller_1.SortProductController();
         return _init.execute(req, res, next);
     };
 };

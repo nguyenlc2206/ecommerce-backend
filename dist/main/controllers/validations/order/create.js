@@ -45,11 +45,14 @@ class ValidationCreateOrder {
                             type: 'number',
                             minimum: 0
                         },
-                        description: {
+                        color: {
+                            type: 'string'
+                        },
+                        image: {
                             type: 'string'
                         }
                     },
-                    required: ['id', 'name', 'size', 'qty', 'price']
+                    required: ['id', 'name', 'size', 'qty', 'price', 'color']
                 }
             },
             shippingAddress: {
@@ -78,10 +81,27 @@ class ValidationCreateOrder {
                 },
                 required: ['name', 'address']
             },
-            totalPrice: { type: 'number', minimum: 0 },
-            codes: { type: 'string' }
+            codes: { type: 'string' },
+            totalPrice: { type: 'number' },
+            discounts: { type: 'array' },
+            paymentCharged: {
+                type: 'object',
+                properties: {
+                    type: {
+                        type: 'string',
+                        isNotEmpty: true,
+                        errorMessage: { isNotEmpty: 'Missing field type!' }
+                    },
+                    method: {
+                        type: 'string',
+                        isNotEmpty: true,
+                        errorMessage: { isNotEmpty: 'Missing field method!' }
+                    }
+                },
+                required: ['type', 'method']
+            }
         },
-        required: ['orderItems', 'shippingAddress', 'totalPrice'],
+        required: ['orderItems', 'shippingAddress', 'paymentCharged'],
         additionalProperties: false
     };
     constructor() {

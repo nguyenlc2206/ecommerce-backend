@@ -18,6 +18,7 @@ const update_controller_1 = require("../../../main/controllers/category/update.c
 const delete_controller_1 = require("../../../main/controllers/category/delete.controller");
 const getAll_controller_1 = require("../../../main/controllers/category/getAll.controller");
 const getById_controller_1 = require("../../../main/controllers/category/getById.controller");
+const active_controller_1 = require("../../../main/controllers/category/active.controller");
 // ==============================||  CATEGORY CONTROLLER ||============================== //
 let CategoryController = class CategoryController {
     /** constructor */
@@ -45,6 +46,11 @@ let CategoryController = class CategoryController {
     // * get account by id
     getById = async (req, res, next) => {
         const _init = new getById_controller_1.GetCategoryByIdController();
+        return _init.execute(req, res, next);
+    };
+    // * active account
+    active = async (req, res, next) => {
+        const _init = new active_controller_1.ActiveCategoryController();
         return _init.execute(req, res, next);
     };
 };

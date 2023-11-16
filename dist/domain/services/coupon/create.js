@@ -83,7 +83,9 @@ let CreateCouponServiceImpl = class CreateCouponServiceImpl {
                 return (0, either_1.failure)(new appError_1.default('Something wrong from accountId!', 400));
         }
         // * check time
-        if (new Date(entity?.body?.startDate) > new Date(entity?.body?.endDate)) {
+        if (new Date(entity?.body?.startDate) > new Date(entity?.body?.endDate) ||
+            new Date(entity?.body?.startDate) < new Date(Date.now()) ||
+            new Date(entity?.body?.endDate) < new Date(Date.now())) {
             return (0, either_1.failure)(new appError_1.default('Something wrong from date!', 400));
         }
         /** save coupon */

@@ -9,6 +9,7 @@ const typedi_1 = require("typedi");
 const account_1 = require("../../main/controllers/account");
 const authentication_1 = require("../../main/controllers/authentication");
 const uploadFile_1 = __importDefault(require("../../shared/common/uploadFile"));
+const middleware_1 = __importDefault(require("../../shared/common/middleware"));
 /** init instance controller */
 const instanceAuth = typedi_1.Container.get(authentication_1.AuthenticationController);
 const instanceAccount = typedi_1.Container.get(account_1.AccountController);
@@ -20,6 +21,8 @@ const AuthenticationRoutes = (router) => {
     router.post('/login', instanceAuth.login);
     // * change password account
     router.patch('/change-password', instanceAuth.protect, instanceAuth.changePassword);
+    // * change password by admin
+    router.patch('/change-password/admin/:id', instanceAuth.protect, (0, middleware_1.default)(['admin']), instanceAuth.changePasswordAdmin);
     // * forgot password
     router.patch('/forgot-password', instanceAuth.forgotPassword);
     // * logout router

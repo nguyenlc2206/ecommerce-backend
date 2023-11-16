@@ -17,6 +17,7 @@ const create_controller_1 = require("../../../main/controllers/coupon/create.con
 const discount_controller_1 = require("../../../main/controllers/coupon/discount.controller");
 const getAll_controller_1 = require("../../../main/controllers/coupon/getAll.controller");
 const delete_controller_1 = require("../../../main/controllers/coupon/delete.controller");
+const active_controller_1 = require("../../../main/controllers/coupon/active.controller");
 // ==============================|| CREATE COUPON CONTROLLER ||============================== //
 let CouponController = class CouponController {
     /** constructor */
@@ -39,6 +40,11 @@ let CouponController = class CouponController {
     /** delete method */
     delete = async (req, res, next) => {
         const _init = new delete_controller_1.DeleteCouponController();
+        return _init.execute(req, res, next);
+    };
+    // * active method
+    active = async (req, res, next) => {
+        const _init = new active_controller_1.ActiveCouponController();
         return _init.execute(req, res, next);
     };
 };

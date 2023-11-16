@@ -20,6 +20,7 @@ const product_1 = require("../../main/controllers/product");
 const order_1 = require("../../main/controllers/order");
 const coupon_1 = require("../../main/controllers/coupon");
 const cart_1 = require("../../main/controllers/cart");
+const email_2 = require("../../main/controllers/email");
 // * import services
 const login_1 = require("../../domain/services/authentication/login");
 const create_1 = require("../../domain/services/account/create");
@@ -61,7 +62,7 @@ const otp_impl_1 = require("../../infrastructure/repositories/otp.impl");
 const token_impl_1 = require("../../infrastructure/repositories/token.impl");
 const product_impl_1 = require("../../infrastructure/repositories/products/product.impl");
 const size_impl_1 = require("../../infrastructure/repositories/products/size.impl");
-const order_2 = require("../../infrastructure/repositories/order");
+const order_impl_1 = require("../../infrastructure/repositories/order.impl");
 const update_4 = require("../../domain/services/order/update");
 const coupon_impl_1 = require("../../infrastructure/repositories/coupon.impl");
 const createSize_1 = require("../../domain/services/product/createSize");
@@ -71,6 +72,17 @@ const filter_1 = require("../../domain/services/product/filter");
 const cart_impl_1 = require("../../infrastructure/repositories/products/cart.impl");
 const create_5 = require("../../domain/services/cart/create");
 const getByAccountId_1 = require("../../domain/services/cart/getByAccountId");
+const update_6 = require("../../domain/services/cart/update");
+const delete_6 = require("../../domain/services/cart/delete");
+// import payment
+const stripe_1 = require("../../domain/services/payment/stripe");
+const changePasswordAdmin_1 = require("../../domain/services/authentication/changePasswordAdmin");
+const active_1 = require("../../domain/services/account/active");
+const active_2 = require("../../domain/services/category/active");
+const active_3 = require("../../domain/services/product/active");
+const active_4 = require("../../domain/services/coupon/active");
+const sort_1 = require("../../domain/services/product/sort");
+const getByAccountId_2 = require("../../domain/services/order/getByAccountId");
 // ==============================||  INJECTTION INIT ||============================== //
 const InjectionInit = (0, catchAsync_1.default)(async () => {
     /** @todo: define store, data */
@@ -88,6 +100,7 @@ const InjectionInit = (0, catchAsync_1.default)(async () => {
     typedi_1.Container.set(cart_1.ProductCartController, new cart_1.ProductCartController());
     typedi_1.Container.set(order_1.OrderController, new order_1.OrderController());
     typedi_1.Container.set(coupon_1.CouponController, new coupon_1.CouponController());
+    typedi_1.Container.set(email_2.EmailController, new email_2.EmailController());
     /** @todo: define services */
     // * define account services
     typedi_1.Container.set(updateMe_1.UpdateAccountMeServiceImpl, new updateMe_1.UpdateAccountMeServiceImpl());
@@ -97,10 +110,12 @@ const InjectionInit = (0, catchAsync_1.default)(async () => {
     typedi_1.Container.set(delete_1.DeleteAccountServiceImpl, new delete_1.DeleteAccountServiceImpl());
     typedi_1.Container.set(update_1.UpdateAccountServiceImpl, new update_1.UpdateAccountServiceImpl());
     typedi_1.Container.set(getById_1.GetAccountByIdServiceImpl, new getById_1.GetAccountByIdServiceImpl());
+    typedi_1.Container.set(active_1.ActiveAccountServiceImpl, new active_1.ActiveAccountServiceImpl());
     // * define authentication services
     typedi_1.Container.set(login_1.LoginServiceImpl, new login_1.LoginServiceImpl());
     typedi_1.Container.set(protected_1.ProtectedServiceImpl, new protected_1.ProtectedServiceImpl());
     typedi_1.Container.set(changePassword_1.ChangePasswordServiceImpl, new changePassword_1.ChangePasswordServiceImpl());
+    typedi_1.Container.set(changePasswordAdmin_1.ChangePasswordAdminServiceImpl, new changePasswordAdmin_1.ChangePasswordAdminServiceImpl());
     typedi_1.Container.set(forgotPassword_1.ForgotPasswordServiceImpl, new forgotPassword_1.ForgotPasswordServiceImpl());
     typedi_1.Container.set(logout_1.LogoutServiceImpl, new logout_1.LogoutServiceImpl());
     // * define OTP services
@@ -112,6 +127,7 @@ const InjectionInit = (0, catchAsync_1.default)(async () => {
     typedi_1.Container.set(delete_2.DeleteCategoryServiceImpl, new delete_2.DeleteCategoryServiceImpl());
     typedi_1.Container.set(getAll_2.GetAllCategoryServiceImpl, new getAll_2.GetAllCategoryServiceImpl());
     typedi_1.Container.set(getById_2.GetCategoryByIdServiceImpl, new getById_2.GetCategoryByIdServiceImpl());
+    typedi_1.Container.set(active_2.ActiveCategoryServiceImpl, new active_2.ActiveCategoryServiceImpl());
     // * define product services
     typedi_1.Container.set(create_2.CreateProductServiceImpl, new create_2.CreateProductServiceImpl());
     typedi_1.Container.set(update_3.UpdateProductServiceImpl, new update_3.UpdateProductServiceImpl());
@@ -124,6 +140,10 @@ const InjectionInit = (0, catchAsync_1.default)(async () => {
     typedi_1.Container.set(filter_1.FilterServiceImpl, new filter_1.FilterServiceImpl());
     typedi_1.Container.set(create_5.CreateProductCartServiceImpl, new create_5.CreateProductCartServiceImpl());
     typedi_1.Container.set(getByAccountId_1.GetProductCartByAccountIdServiceImpl, new getByAccountId_1.GetProductCartByAccountIdServiceImpl());
+    typedi_1.Container.set(update_6.UpdateProductCardServiceImpl, new update_6.UpdateProductCardServiceImpl());
+    typedi_1.Container.set(delete_6.DeleteProductCartServiceImpl, new delete_6.DeleteProductCartServiceImpl());
+    typedi_1.Container.set(active_3.ActiveProductServiceImpl, new active_3.ActiveProductServiceImpl());
+    typedi_1.Container.set(sort_1.SortProductServiceImpl, new sort_1.SortProductServiceImpl());
     // * define order services
     typedi_1.Container.set(create_3.CreateOrderServiceImpl, new create_3.CreateOrderServiceImpl());
     typedi_1.Container.set(delete_4.DeleteOrderServiceImpl, new delete_4.DeleteOrderServiceImpl());
@@ -131,23 +151,27 @@ const InjectionInit = (0, catchAsync_1.default)(async () => {
     typedi_1.Container.set(getById_4.GetOrderByIdServiceImpl, new getById_4.GetOrderByIdServiceImpl());
     typedi_1.Container.set(update_4.UpdateOrderServiceImpl, new update_4.UpdateOrderServiceImpl());
     typedi_1.Container.set(getPaginate_1.GetPaginateOrderServiceImpl, new getPaginate_1.GetPaginateOrderServiceImpl());
+    typedi_1.Container.set(getByAccountId_2.GetOrderByAccountIdServiceImpl, new getByAccountId_2.GetOrderByAccountIdServiceImpl());
     // * define coupon services
     typedi_1.Container.set(create_4.CreateCouponServiceImpl, new create_4.CreateCouponServiceImpl());
     typedi_1.Container.set(discount_1.DiscountServiceImpl, new discount_1.DiscountServiceImpl());
     typedi_1.Container.set(getAll_5.GetAllCouponServiceImpl, new getAll_5.GetAllCouponServiceImpl());
     typedi_1.Container.set(delete_5.DeleteCouponServiceImpl, new delete_5.DeleteCouponServiceImpl());
     typedi_1.Container.set(update_5.UpdateCouponServiceImpl, new update_5.UpdateCouponServiceImpl());
+    typedi_1.Container.set(active_4.ActiveCouponServiceImpl, new active_4.ActiveCouponServiceImpl());
     /** @todo: define store, repository */
     // * define account repository
     typedi_1.Container.set(account_impl_1.AccountRepositoryImpl, new account_impl_1.AccountRepositoryImpl());
     typedi_1.Container.set(otp_impl_1.OTPRepositoryImpl, new otp_impl_1.OTPRepositoryImpl());
     typedi_1.Container.set(token_impl_1.TokenRepositoryImpl, new token_impl_1.TokenRepositoryImpl());
     typedi_1.Container.set(category_2.CategoryRepositoryImpl, new category_2.CategoryRepositoryImpl());
-    typedi_1.Container.set(order_2.OrderRepositoryImpl, new order_2.OrderRepositoryImpl());
+    typedi_1.Container.set(order_impl_1.OrderRepositoryImpl, new order_impl_1.OrderRepositoryImpl());
     typedi_1.Container.set(coupon_impl_1.CouponRepositoryImpl, new coupon_impl_1.CouponRepositoryImpl());
     // * products repository
     typedi_1.Container.set(product_impl_1.ProductRepositoryImpl, new product_impl_1.ProductRepositoryImpl());
     typedi_1.Container.set(size_impl_1.ProductSizeRepositoryImpl, new size_impl_1.ProductSizeRepositoryImpl());
     typedi_1.Container.set(cart_impl_1.ProductCartRepositoryImpl, new cart_impl_1.ProductCartRepositoryImpl());
+    // * payment
+    typedi_1.Container.set(stripe_1.PaymentStripeServiceImpl, new stripe_1.PaymentStripeServiceImpl());
 });
 exports.default = InjectionInit;

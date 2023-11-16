@@ -79,6 +79,32 @@ let ProductSizeRepositoryImpl = class ProductSizeRepositoryImpl {
         const result = await Size_1.default.find(entity?.filter).populate(popObj);
         return result;
     }
+    /** overiding getById method */
+    async getById(id) {
+        const popObj = {
+            path: 'productId'
+        };
+        const result = await Size_1.default.findById(id).populate(popObj);
+        return result;
+    }
+    /** overding sort method */
+    async sort() {
+        const pageNumber = 1;
+        const pageSize = 10;
+        const popObj = {
+            path: 'productId',
+            populate: {
+                path: 'categoryId'
+            }
+        };
+        const appointments = await Size_1.default.aggregate([
+            { $sort: { discount: -1 } },
+            { $skip: (pageNumber - 1) * pageSize },
+            { $limit: pageSize }
+        ]);
+        const result = await Size_1.default.populate(appointments, popObj);
+        return result;
+    }
 };
 exports.ProductSizeRepositoryImpl = ProductSizeRepositoryImpl;
 exports.ProductSizeRepositoryImpl = ProductSizeRepositoryImpl = __decorate([

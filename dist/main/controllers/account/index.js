@@ -21,6 +21,7 @@ const getAll_cotroller_1 = require("../../../main/controllers/account/getAll.cot
 const delete_controller_1 = require("../../../main/controllers/account/delete.controller");
 const update_controller_1 = require("../../../main/controllers/account/update.controller");
 const getById_controller_1 = require("../../../main/controllers/account/getById.controller");
+const active_controller_1 = require("../../../main/controllers/account/active.controller");
 // ==============================||  ACCOUNT CONTROLLER ||============================== //
 let AccountController = class AccountController {
     // * constructor
@@ -58,6 +59,11 @@ let AccountController = class AccountController {
     // * delete account
     delete = async (req, res, next) => {
         const _init = new delete_controller_1.DeleteAccountController();
+        return _init.execute(req, res, next);
+    };
+    // * active account
+    active = async (req, res, next) => {
+        const _init = new active_controller_1.ActiveAccountController();
         return _init.execute(req, res, next);
     };
 };

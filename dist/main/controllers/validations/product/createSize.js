@@ -38,9 +38,14 @@ class ValidationCreateProductSize {
             discount: {
                 type: 'number',
                 minimum: 0
+            },
+            color: {
+                type: 'string',
+                isNotEmpty: true,
+                errorMessage: { isNotEmpty: 'Missing field color!' }
             }
         },
-        required: ['size', 'price', 'totalQty', 'productId'],
+        required: ['size', 'price', 'totalQty', 'productId', 'color'],
         additionalProperties: false
     };
     constructor() {

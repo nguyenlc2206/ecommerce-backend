@@ -30,6 +30,7 @@ const StripeWebhook = (app) => {
             res.status(400).send(`Webhook Error: ${err.message}`);
             return;
         }
+        console.log('>>>Check event type:', event.type);
         // Handle the event
         switch (event.type) {
             case 'checkout.session.completed':
@@ -45,12 +46,6 @@ const StripeWebhook = (app) => {
                     currency: session.currency
                 };
                 const responseUpdateOrder = updateOrderService.execute(dataUpdateOrder);
-                /** @todo: update coupon */
-                const dataUpdateCoupon = {
-                    id: JSON.parse(couponId),
-                    accountId: JSON.parse(accountId)
-                };
-                const responseUpdateCoupon = updateCouponService.execute(dataUpdateCoupon);
                 // Then define and call a function to handle the event payment_intent.succeeded
                 break;
             // ... handle other event types

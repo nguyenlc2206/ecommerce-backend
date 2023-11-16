@@ -39,14 +39,15 @@ class ProductSizeModel {
         const _init = new Product_1.ProductModel();
         productModel?.map((item) => {
             products.push({
-                id: item?.id,
+                id: item?.id ? item?.id : item?._id,
                 size: item?.size,
                 price: item?.price,
                 discount: item?.discount,
                 color: item?.color,
                 totalQty: item?.totalQty,
                 totalSold: item?.totalSold,
-                isDeleted: item?.isDeleted
+                isDeleted: item?.isDeleted,
+                product: _init.fromProductModel(item?.productId)
             });
         });
         return products;

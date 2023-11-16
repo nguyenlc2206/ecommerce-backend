@@ -8,10 +8,9 @@ const mongoose_1 = __importDefault(require("mongoose"));
 // * import porjects
 const env_1 = __importDefault(require("../../main/config/env"));
 const catchAsync_1 = __importDefault(require("../../shared/common/catchAsync"));
-const DB_URL = env_1.default.databaseURL.replace('<PASSWORD>', env_1.default.databasePassword);
 /** @todo: connect to mongo database */
 const databaseConnection = (0, catchAsync_1.default)(async () => {
-    const connected = await mongoose_1.default.connect(DB_URL, {});
+    const connected = await mongoose_1.default.connect(env_1.default.databaseURL, {});
     console.log(`Mongodb connected ${connected.connection.host}`);
     console.log('Connection database successful!');
 });

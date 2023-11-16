@@ -16,12 +16,12 @@ const typedi_1 = require("typedi");
 // * import projects
 const either_1 = require("../../../shared/common/either");
 const Order_1 = require("../../../domain/models/Order");
-const order_1 = require("../../../infrastructure/repositories/order");
+const order_impl_1 = require("../../../infrastructure/repositories/order.impl");
 let GetAllOrderServiceImpl = class GetAllOrderServiceImpl {
     orderRepo;
     // * constructor
     constructor() {
-        this.orderRepo = typedi_1.Container.get(order_1.OrderRepositoryImpl);
+        this.orderRepo = typedi_1.Container.get(order_impl_1.OrderRepositoryImpl);
     }
     /** overiding execute method */
     async execute() {

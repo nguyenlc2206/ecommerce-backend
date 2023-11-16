@@ -25,9 +25,20 @@ const OrderSchema = new mongoose_1.default.Schema({
         type: Object,
         required: true
     },
+    paymentCharged: {
+        type: Object,
+        required: true
+    },
+    discounts: {
+        type: Array,
+        default: []
+    },
     orderNumber: {
         type: String,
         default: randomTxt + randomNumbers
+    },
+    codes: {
+        type: String
     },
     //for stripe payment
     paymentStatus: {
@@ -50,7 +61,7 @@ const OrderSchema = new mongoose_1.default.Schema({
     status: {
         type: String,
         default: 'pending',
-        enum: ['pending', 'processing', 'shipped', 'delivered']
+        enum: ['pending', 'processing', 'shipped', 'delivered', 'cancel']
     },
     deliveredAt: {
         type: Date

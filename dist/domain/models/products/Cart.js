@@ -5,18 +5,27 @@ exports.ProductCartModel = void 0;
 class ProductCartModel {
     id;
     products;
+    name;
+    size;
+    color;
+    qty;
     accountId;
     status;
     billingAddress;
+    paymentMethod;
+    discounts;
     isDeleted;
     deletedAt;
     createdAt;
     updatedAt;
+    productId;
     fromProductCartModel(productCartModel) {
         return {
             id: productCartModel?.id,
             status: productCartModel?.status,
-            products: productCartModel?.products
+            products: productCartModel?.products,
+            discounts: productCartModel?.discounts,
+            billingAddress: productCartModel?.billingAddress
         };
     }
     fromProductCartModelGetAll(productCartModel) {
@@ -25,7 +34,9 @@ class ProductCartModel {
             products.push({
                 id: item?.id,
                 status: item?.status,
-                products: item?.products
+                products: item?.products,
+                discounts: item?.discounts,
+                billingAddress: item?.billingAddress
             });
         });
         return products;

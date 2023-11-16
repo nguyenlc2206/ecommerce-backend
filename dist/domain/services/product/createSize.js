@@ -57,8 +57,16 @@ let CreateProductSizeServiceImpl = class CreateProductSizeServiceImpl {
         const resultGet = await this.hanleGetProduct(entity?.body?.productId);
         if (resultGet.isFailure())
             return (0, either_1.failure)(resultGet.error);
+        /** handle check type products */
+        const resultCheckType = await this.handleCheckProductAdd(entity);
+        if (resultCheckType.isFailure())
+            return (0, either_1.failure)(resultCheckType.error);
         /** create product size */
         const response = await this.productSizeRepo.create({ ...entity?.body });
+        /** handleUpdate product */
+        const resUpdate = await this.handleUpdateProduct(entity, resultGet.data);
+        if (resUpdate.isFailure())
+            return (0, either_1.failure)(resUpdate.error);
         return (0, either_1.success)(response);
     }
     /**@todo: handle get product with id */
@@ -67,6 +75,26 @@ let CreateProductSizeServiceImpl = class CreateProductSizeServiceImpl {
         if (!response)
             return (0, either_1.failure)(new appError_1.default('Not have product!', 400));
         return (0, either_1.success)(response);
+    };
+    /** @todo: handle check size and color is exist in database */
+    handleCheckProductAdd = async (entity) => {
+        const res = await this.productSizeRepo.find({
+            filter: { productId: entity?.body?.productId, size: entity?.body?.size, color: entity?.body?.color }
+        });
+        if (res.length)
+            return (0, either_1.failure)(new appError_1.default('Product is exists in database!', 400));
+        return (0, either_1.success)(true);
+    };
+    /** @todo: handle update product */
+    handleUpdateProduct = async (entity, item) => {
+        let _colors = [...item?.colors];
+        let _sizes = [...item?.sizes];
+        if (!item.colors?.includes(entity?.body?.color))
+            _colors.push(entity?.body.color);
+        if (!item.sizes?.includes(entity?.body?.color))
+            _sizes.push(entity?.body.size);
+        const res = await this.productRepo.update(item?.id, { colors: _colors, sizes: _sizes });
+        return (0, either_1.success)(true);
     };
 };
 exports.CreateProductSizeServiceImpl = CreateProductSizeServiceImpl;

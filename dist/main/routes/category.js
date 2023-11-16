@@ -15,10 +15,12 @@ const instanceCategory = typedi_1.Container.get(category_1.CategoryController);
 const instanceAuth = typedi_1.Container.get(authentication_1.AuthenticationController);
 /** @todo: init routes */
 const CategoryRoutes = (router) => {
+    /** active category */
+    router.get('/category/active/:id', instanceAuth.protect, (0, middleware_1.default)(['admin']), instanceCategory.active);
     /** create method */
     router.post('/category', uploadFile_1.default.single('image'), instanceAuth.protect, (0, middleware_1.default)(['admin']), instanceCategory.create);
     /** update method */
-    router.patch('/category/:id', instanceAuth.protect, (0, middleware_1.default)(['admin']), instanceCategory.update);
+    router.patch('/category/:id', uploadFile_1.default.single('image'), instanceAuth.protect, (0, middleware_1.default)(['admin']), instanceCategory.update);
     /** delete method */
     router.delete('/category/:id', instanceAuth.protect, (0, middleware_1.default)(['admin']), instanceCategory.delete);
     /** getAll mwthod */

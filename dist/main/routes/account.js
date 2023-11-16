@@ -16,6 +16,8 @@ const instanceAuth = typedi_1.Container.get(authentication_1.AuthenticationContr
 // console.log('>>>Check instance:', instance);
 /** @todo: init routes */
 const AccountRoutes = (router) => {
+    /** active account */
+    router.get('/account/active/:id', instanceAuth.protect, (0, middleware_1.default)(['admin']), instanceAccount.active);
     /** get account me */
     router.get('/account-me', instanceAuth.protect, instanceAccount.getMe);
     /** update account me */

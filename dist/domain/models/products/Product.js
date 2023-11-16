@@ -10,36 +10,63 @@ class ProductModel {
     description;
     categoryId;
     sizes;
+    colors;
     accountId;
     images;
     reviews;
     isDeleted;
     createdAt;
     updatedAt;
+    deletedAt;
     category;
     products;
     filter;
     filterCategories;
     filterProductSize;
+    totalQty;
     fromProductModel(productModel) {
-        const _init = new Category_1.CategoryModel();
+        const _init = new Size_1.ProductSizeModel();
+        const _category = new Category_1.CategoryModel();
         return {
             id: productModel?.id,
             name: productModel?.name,
             description: productModel?.description,
             sizes: productModel?.sizes,
+            colors: productModel?.colors,
             images: productModel?.images,
-            category: _init.fromCategoryModel(productModel?.categoryId)
+            products: _init.fromProductModelGetAll(productModel?.ProductSize),
+            category: _category.fromCategoryModel(productModel?.categoryId)
         };
     }
     fromProductModelGetAll(productModel) {
         let products = [];
         const _init = new Size_1.ProductSizeModel();
+        const _category = new Category_1.CategoryModel();
         productModel?.map((item) => {
-            if (!item?.isDeleted) {
+            products.push({
+                id: item?.id,
+                name: item?.name,
+                sizes: item?.sizes,
+                colors: item?.colors,
+                description: item?.description,
+                images: item?.images,
+                products: _init.fromProductModelGetAll(item?.ProductSize),
+                category: _category.fromCategoryModel(item?.categoryId),
+                isDeleted: item?.isDeleted
+            });
+        });
+        return products;
+    }
+    fromProductModelQuery(productModel) {
+        let products = [];
+        const _init = new Size_1.ProductSizeModel();
+        productModel?.map((item) => {
+            if (!item?.isDeleted && item?.ProductSize.length) {
                 products.push({
                     id: item?.id,
                     name: item?.name,
+                    sizes: item?.sizes,
+                    colors: item?.colors,
                     description: item?.description,
                     images: item?.images,
                     products: _init.fromProductModelGetAll(item?.ProductSize),

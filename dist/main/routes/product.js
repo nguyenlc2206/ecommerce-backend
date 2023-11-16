@@ -17,10 +17,18 @@ const instanceAuth = typedi_1.Container.get(authentication_1.AuthenticationContr
 const instanceProductCart = typedi_1.Container.get(cart_1.ProductCartController);
 /** @todo: init routes */
 const ProductRoutes = (router) => {
+    /** active method */
+    router.get('/product/active/:id', instanceAuth.protect, (0, middleware_1.default)(['admin']), instanceProduct.active);
     /** create method */
     router.post('/product', uploadFile_1.default.array('images'), instanceAuth.protect, (0, middleware_1.default)(['admin']), instanceProduct.create);
+    /** get product search*/
+    router.get('/product/search', instanceAuth.protect, instanceProduct.query);
     /** add product cart */
     router.post('/product/cart', instanceAuth.protect, instanceProductCart.create);
+    /** update product cart */
+    router.patch('/product/cart', instanceAuth.protect, instanceProductCart.update);
+    /** delete product cart */
+    router.delete('/product/cart/:id', instanceAuth.protect, instanceProductCart.delete);
     /** get product cart by account id*/
     router.get('/product/cart', instanceAuth.protect, instanceProductCart.getByAccountId);
     /** create size method */
@@ -29,15 +37,15 @@ const ProductRoutes = (router) => {
     router.patch('/product/:id', instanceAuth.protect, (0, middleware_1.default)(['admin']), instanceProduct.update);
     /** delete method */
     router.delete('/product/:id', instanceAuth.protect, (0, middleware_1.default)(['admin']), instanceProduct.delete);
+    /** sort method */
+    router.get('/product/sort', instanceAuth.protect, instanceProduct.sort);
     /** getAll method */
     router.get('/product/getAll', instanceAuth.protect, instanceProduct.getAll);
-    /** get product by id */
-    router.get('/product/:id', instanceAuth.protect, instanceProduct.getById);
     /** get product size by id */
     router.get('/product/sizes/:id', instanceAuth.protect, (0, middleware_1.default)(['admin']), instanceProduct.getAllSize);
-    /** get product by id and size*/
-    router.get('/product?:id?:size', instanceAuth.protect, instanceProduct.query);
     /** filter product */
     router.post('/product/filter', instanceAuth.protect, instanceProduct.filter);
+    /** get product by id */
+    router.get('/product/:id', instanceAuth.protect, instanceProduct.getById);
 };
 exports.ProductRoutes = ProductRoutes;
