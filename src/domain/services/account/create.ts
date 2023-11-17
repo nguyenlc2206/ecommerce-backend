@@ -13,7 +13,7 @@ import { AccountRepositoryImpl } from '@ecommerce-backend/src/infrastructure/rep
 import { Either, failure, success } from '@ecommerce-backend/src/shared/common/either';
 import { BcryptAdapter } from '@ecommerce-backend/src/shared/common/bcrypt';
 import { CloudinaryMethods } from '@ecommerce-backend/src/shared/methods/cloudinary';
-import { KeyedObject, ParamsImageType } from '@ecommerce-backend/src/shared/types';
+import { AccountRequest, KeyedObject, ParamsImageType } from '@ecommerce-backend/src/shared/types';
 import { Cloudinary } from '@ecommerce-backend/src/shared/common/cloudinary';
 
 // ==============================||  CREATE ACCOUNT SERVICES IMPLEMENT ||============================== //
@@ -23,7 +23,7 @@ export interface CreateAccountService<Entity> {
 }
 
 @Service()
-export class CreateAccountServiceImpl<Entity extends AccountModel> implements CreateAccountService<Entity> {
+export class CreateAccountServiceImpl<Entity extends AccountRequest> implements CreateAccountService<Entity> {
     protected accountRepo: AccountRepository<AccountModel>;
     protected cloudinary: CloudinaryMethods<KeyedObject>;
 
@@ -36,16 +36,16 @@ export class CreateAccountServiceImpl<Entity extends AccountModel> implements Cr
     /** overiding execute method */
     async execute(entity: Entity): Promise<Either<AccountModel, AppError>> {
         /** check email in database */
-        const _checkEmail = await this.handleCheckEmail(entity?.email);
+        const _checkEmail = await this.handleCheckEmail(entity?.body?.email);
         if (_checkEmail.isFailure()) return failure(_checkEmail.error);
 
         /** hash password */
-        const _hashPassword = await this.handleHashPassword(entity?.password);
-        const _entity = { ...entity, password: _hashPassword };
+        const _hashPassword = await this.handleHashPassword(entity?.body?.password);
+        const _entity = { ...entity?.body, password: _hashPassword };
         let __entity = { ..._entity };
 
         /** handle cloudinary iamge */
-        if (entity.file) {
+        if (entity?.file) {
             let img = fs.readFileSync(entity.file.path);
             const params: ParamsImageType = {
                 database64: 'data:image/png;base64,' + img.toString('base64'),
@@ -63,7 +63,7 @@ export class CreateAccountServiceImpl<Entity extends AccountModel> implements Cr
         }
 
         /** create account */
-        const response = await this.accountRepo.create(_.omit(__entity, 'file'));
+        const response = await this.accountRepo.create(__entity);
         const _init = new AccountModel();
         const result = _init.fromAccountModel(response);
 

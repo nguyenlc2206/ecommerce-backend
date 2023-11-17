@@ -9,13 +9,14 @@ import { AccountModel } from '@ecommerce-backend/src/domain/models/Account';
 import { CreateAccountService, CreateAccountServiceImpl } from '@ecommerce-backend/src/domain/services/account/create';
 import { Validation } from '@ecommerce-backend/src/shared/common/validations';
 import { ValidationCreateAccount } from '@ecommerce-backend/src/main/controllers/validations/account/create';
+import { AccountRequest } from '@ecommerce-backend/src/shared/types';
 
 // ==============================||  CREATE ACCOUNT CONTROLLER ||============================== //
 
 @Service()
 export class CreateAccountController {
     protected validation: Validation = new ValidationCreateAccount();
-    protected createAccountService: CreateAccountService<AccountModel>;
+    protected createAccountService: CreateAccountService<AccountRequest>;
 
     // * constructor
     constructor() {
@@ -29,8 +30,7 @@ export class CreateAccountController {
         if (validations) return next(validations);
 
         // * execute account services
-        let data: AccountModel = { ...req.body, file: { ...req.file } };
-        const result = await this.createAccountService.execute(data);
+        const result = await this.createAccountService.execute(req);
         if (result.isFailure()) return next(result.error);
 
         const { data: account } = result;
