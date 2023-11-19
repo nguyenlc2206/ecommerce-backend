@@ -10,6 +10,7 @@ import { ProductRoutes } from '@ecommerce-backend/src/main/routes/product';
 import { OrderRoutes } from '@ecommerce-backend/src/main/routes/order';
 import { CouponRoutes } from '@ecommerce-backend/src/main/routes/coupon';
 import { EmailRoutes } from '@ecommerce-backend/src/main/routes/email';
+import { PaymentRoutes } from '@ecommerce-backend/src/main/routes/payment';
 
 /** @todo: setup configs routes express */
 
@@ -22,7 +23,8 @@ const ExpressRoutes = (app: Express): void => {
         ProductRoutes,
         OrderRoutes,
         CouponRoutes,
-        EmailRoutes
+        EmailRoutes,
+        PaymentRoutes
     ];
     /** init router */
     const router = Router();

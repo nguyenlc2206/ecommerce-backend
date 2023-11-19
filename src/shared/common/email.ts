@@ -97,7 +97,6 @@ export class Email<T extends KeyedObject> implements EmailMethods<T> {
             return total - coupon;
         });
 
-        console.log(entity);
         const html = compiledTemplate(entity);
 
         const info = await this.createNewTransport().sendMail({

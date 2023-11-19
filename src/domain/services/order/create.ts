@@ -1,7 +1,6 @@
 // * import lib
 import { Service, Container } from 'typedi';
 import * as _ from 'lodash';
-import Stripe from 'stripe';
 
 // * import projects
 import AppError from '@ecommerce-backend/src/shared/common/appError';
@@ -22,11 +21,18 @@ import { ProductSizeRepository } from '@ecommerce-backend/src/domain/repositorie
 import { DiscountService, DiscountServiceImpl } from '@ecommerce-backend/src/domain/services/coupon/discount';
 import { CouponModel } from '@ecommerce-backend/src/domain/models/Coupon';
 import { CouponRepository } from '@ecommerce-backend/src/domain/repositories/coupon';
-
-// import payment
-import { PaymentStripeService, PaymentStripeServiceImpl } from '@ecommerce-backend/src/domain/services/payment/stripe';
 import { CouponRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/coupon.impl';
 import { Email } from '@ecommerce-backend/src/shared/common/email';
+
+// import payment
+import {
+    PaymentStripeService,
+    PaymentStripeServiceImpl
+} from '@ecommerce-backend/src/domain/services/payment/stripe/stripe';
+import {
+    PaypalCreateOrderService,
+    PaypalCreateOrderServiceImpl
+} from '@ecommerce-backend/src/domain/services/payment/paypal/create';
 
 // ==============================||  CREATE ORDER SERVICES IMPLEMENT ||============================== //
 
@@ -45,6 +51,7 @@ export class CreateOrderServiceImpl<Entity extends AccountRequest> implements Cr
 
     /** init stripe payment */
     protected paymentStripe: PaymentStripeService<KeyedObject>;
+    protected paymentPaypal: PaypalCreateOrderService<KeyedObject>;
     protected emailService: Email<KeyedObject>;
 
     /** constructor */
@@ -54,6 +61,7 @@ export class CreateOrderServiceImpl<Entity extends AccountRequest> implements Cr
         this.productSizeRepo = Container.get(ProductSizeRepositoryImpl);
         this.discountService = Container.get(DiscountServiceImpl);
         this.paymentStripe = Container.get(PaymentStripeServiceImpl);
+        this.paymentPaypal = Container.get(PaypalCreateOrderServiceImpl);
         this.couponRepo = Container.get(CouponRepositoryImpl);
         this.emailService = Container.get(Email);
     }
@@ -83,13 +91,11 @@ export class CreateOrderServiceImpl<Entity extends AccountRequest> implements Cr
         const result = _init.fromOrderModel(resultSave.data);
 
         // * handle send email confirm order
-        const resultSendEmail = this.handleSendEmailConfirmOrder(entity, result);
-
+        this.handleSendEmailConfirmOrder(entity, result);
         // * handle update product size
-        const resultUpdate = this.handleUpdateProductSize(entity);
-
+        this.handleUpdateProductSize(entity);
         // handle update coupon
-        const resultCoupon = this.handleUpdateCodeCoupon(entity?.accountId!, coupon);
+        this.handleUpdateCodeCoupon(entity?.accountId!, coupon);
 
         // switch case processing payment
         switch (entity?.body?.paymentCharged?.method) {
@@ -97,6 +103,11 @@ export class CreateOrderServiceImpl<Entity extends AccountRequest> implements Cr
                 const resultStripe = await this.paymentStripe.execute(entity, resultSave.data?.id!, coupon);
                 if (resultStripe.isFailure()) return failure(resultStripe.error);
                 return success({ ...resultStripe.data, ...result });
+            }
+            case 'paypal': {
+                const resultPaypal = await this.paymentPaypal.excute(entity, result?.id!);
+                if (resultPaypal.isFailure()) return failure(resultPaypal.error);
+                return success({ ...resultPaypal.data, ...result });
             }
             default: {
                 return success(result);

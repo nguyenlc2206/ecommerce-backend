@@ -35,7 +35,7 @@ export class OrderModel {
             paymentMethod: orderModel?.paymentMethod,
             currency: orderModel?.currency,
             status: orderModel?.status,
-            account: _account.fromAccountModel(orderModel?.accountId!),
+            account: orderModel?.accountId ? _account.fromAccountModel(orderModel?.accountId) : {},
             discounts: orderModel?.discounts,
             isDeleted: orderModel?.isDeleted,
             createdAt: orderModel?.createdAt
@@ -57,7 +57,7 @@ export class OrderModel {
                 paymentMethod: item?.paymentMethod,
                 currency: item?.currency,
                 status: item?.status,
-                account: _account.fromAccountModel(item?.accountId!),
+                account: item?.accountId ? _account.fromAccountModel(item?.accountId) : {},
                 discounts: item?.discounts,
                 isDeleted: item?.isDeleted
             } as OrderModel);

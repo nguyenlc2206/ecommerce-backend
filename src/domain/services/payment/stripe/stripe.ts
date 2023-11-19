@@ -44,7 +44,6 @@ export class PaymentStripeServiceImpl<Entity extends KeyedObject> implements Pay
                 quantity: item?.qty
             };
         });
-        console.log('>>>Check convertedOrders:', convertedOrders);
 
         const session = await this.stripe.checkout.sessions.create({
             payment_method_types: ['card'],
@@ -57,8 +56,8 @@ export class PaymentStripeServiceImpl<Entity extends KeyedObject> implements Pay
             },
             mode: 'payment',
             client_reference_id: orderId,
-            success_url: 'http://127.0.0.1:5173/checkout/success',
-            cancel_url: 'http://localhost:8000/checkout/fail'
+            success_url: `${ENV.host}/checkout/success`,
+            cancel_url: `${ENV.host}/checkout/fail`
             // success_url: `${req.protocol}://${req.get('host')}/my-orders`,
             // cancel_url: 'http://localhost:3000/cancel'
         });

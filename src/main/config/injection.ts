@@ -76,9 +76,6 @@ import { CreateProductCartServiceImpl } from '@ecommerce-backend/src/domain/serv
 import { GetProductCartByAccountIdServiceImpl } from '@ecommerce-backend/src/domain/services/cart/getByAccountId';
 import { UpdateProductCardServiceImpl } from '@ecommerce-backend/src/domain/services/cart/update';
 import { DeleteProductCartServiceImpl } from '@ecommerce-backend/src/domain/services/cart/delete';
-
-// import payment
-import { PaymentStripeServiceImpl } from '@ecommerce-backend/src/domain/services/payment/stripe';
 import { ChangePasswordAdminServiceImpl } from '@ecommerce-backend/src/domain/services/authentication/changePasswordAdmin';
 import { ActiveAccountServiceImpl } from '@ecommerce-backend/src/domain/services/account/active';
 import { ActiveCategoryServiceImpl } from '@ecommerce-backend/src/domain/services/category/active';
@@ -86,6 +83,12 @@ import { ActiveProductServiceImpl } from '@ecommerce-backend/src/domain/services
 import { ActiveCouponServiceImpl } from '@ecommerce-backend/src/domain/services/coupon/active';
 import { SortProductServiceImpl } from '@ecommerce-backend/src/domain/services/product/sort';
 import { GetOrderByAccountIdServiceImpl } from '@ecommerce-backend/src/domain/services/order/getByAccountId';
+
+// import payment
+import { PaymentStripeServiceImpl } from '@ecommerce-backend/src/domain/services/payment/stripe/stripe';
+import { PaypalCreateOrderServiceImpl } from '@ecommerce-backend/src/domain/services/payment/paypal/create';
+import { PaymentController } from '@ecommerce-backend/src/main/controllers/payment';
+import { PaypalUpdateOrderServiceImpl } from '@ecommerce-backend/src/domain/services/payment/paypal/update';
 
 // ==============================||  INJECTTION INIT ||============================== //
 
@@ -107,6 +110,7 @@ const InjectionInit = catchAsync(async () => {
     Container.set(OrderController, new OrderController());
     Container.set(CouponController, new CouponController());
     Container.set(EmailController, new EmailController());
+    Container.set(PaymentController, new PaymentController());
 
     /** @todo: define services */
     // * define account services
@@ -190,6 +194,8 @@ const InjectionInit = catchAsync(async () => {
 
     // * payment
     Container.set(PaymentStripeServiceImpl, new PaymentStripeServiceImpl());
+    Container.set(PaypalCreateOrderServiceImpl, new PaypalCreateOrderServiceImpl());
+    Container.set(PaypalUpdateOrderServiceImpl, new PaypalUpdateOrderServiceImpl());
 });
 
 export default InjectionInit;

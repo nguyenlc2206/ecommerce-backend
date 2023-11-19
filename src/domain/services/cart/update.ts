@@ -44,43 +44,24 @@ export class UpdateProductCardServiceImpl<Entity extends AccountRequest> impleme
 
         // check product item change
         if (entity?.body?.products) {
-            const eleChanged = [
-                ...this.handleGetEleChanged(entity?.body?.products, resultCheck?.data?.products!),
-                ...this.handleGetEleChanged(resultCheck?.data?.products!, entity?.body?.products)
-            ];
-
-            const resultCheckProduct = await this.handleCheckProduct(eleChanged[0]?.productId!);
-            if (resultCheckProduct.isFailure()) return failure(resultCheckProduct.error);
-
-            // check product size
-            const resultCheckSize = await this.handleCheckProductSize(eleChanged[0]?.id!);
-            if (resultCheckSize.isFailure()) return failure(resultCheckSize.error);
+            const resCheckItem = await this.handleCheckItemChanged(
+                entity?.body?.products,
+                resultCheck?.data?.products!
+            );
+            if (resCheckItem.isFailure()) return failure(resCheckItem.error);
         }
 
         // update cart
-        let responseResult = {} as ProductCartModel;
-        // check order complete
-        if (entity?.body?.status === 'complete') {
-            // order from payment to complete
-            const resultUpdate = await this.handleUpdateCart(resultCheck.data?.id!, {
-                ...entity?.body,
-                products: [],
-                discounts: [],
-                status: 'initial'
-            });
-            if (resultUpdate.isFailure()) return failure(resultUpdate.error);
-            responseResult = resultUpdate.data;
-
-            // send email confirm order
-        } else {
-            const resultUpdate = await this.handleUpdateCart(resultCheck.data?.id!, entity?.body);
-            if (resultUpdate.isFailure()) return failure(resultUpdate.error);
-            responseResult = resultUpdate.data;
-        }
+        const resultUpdateCart = await this.handleCheckStatusCartandUpdate(
+            entity?.body?.status,
+            resultCheck.data?.id!,
+            entity
+        );
+        if (resultUpdateCart.isFailure()) return failure(resultUpdateCart.error);
 
         // processing data
         const _init = new ProductCartModel();
-        const result = _init.fromProductCartModel(responseResult);
+        const result = _init.fromProductCartModel(resultUpdateCart.data);
         return success(result);
     }
 
@@ -133,5 +114,47 @@ export class UpdateProductCardServiceImpl<Entity extends AccountRequest> impleme
     /** @todo: get ele change in array */
     private handleGetEleChanged = (arr1: Array<ProductCartModel>, arr2: Array<ProductCartModel>) => {
         return arr1.filter((object1) => !arr2.some((object2) => object1.qty === object2.qty));
+    };
+
+    /** @todo: check product item change */
+    private handleCheckItemChanged = async (
+        array1: ProductCartModel[],
+        array2: ProductCartModel[]
+    ): Promise<Either<boolean, AppError>> => {
+        const eleChanged = [...this.handleGetEleChanged(array1, array2), ...this.handleGetEleChanged(array2, array1)];
+
+        const resultCheckProduct = await this.handleCheckProduct(eleChanged[0]?.productId!);
+        if (resultCheckProduct.isFailure()) return failure(resultCheckProduct.error);
+
+        // check product size
+        const resultCheckSize = await this.handleCheckProductSize(eleChanged[0]?.id!);
+        if (resultCheckSize.isFailure()) return failure(resultCheckSize.error);
+
+        return success(true);
+    };
+
+    /** @todo: check status cart and update */
+    private handleCheckStatusCartandUpdate = async (
+        status: string,
+        id: string,
+        entity: AccountRequest
+    ): Promise<Either<ProductCartModel, AppError>> => {
+        let responseResult = {} as ProductCartModel;
+        if (status === 'complete') {
+            // order from payment to complete
+            const resultUpdate = await this.handleUpdateCart(id, {
+                ...entity?.body,
+                products: [],
+                discounts: [],
+                status: 'initial'
+            });
+            if (resultUpdate.isFailure()) return failure(resultUpdate.error);
+            responseResult = resultUpdate.data;
+        } else {
+            const resultUpdate = await this.handleUpdateCart(id, { ...entity?.body });
+            if (resultUpdate.isFailure()) return failure(resultUpdate.error);
+            responseResult = resultUpdate.data;
+        }
+        return success(responseResult);
     };
 }

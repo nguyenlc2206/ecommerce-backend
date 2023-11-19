@@ -12,7 +12,7 @@ export class ProductCartModel {
     status?: string;
     billingAddress?: KeyedObject;
     paymentMethod?: KeyedObject;
-    discounts?: number;
+    discounts?: KeyedObject;
     isDeleted?: boolean;
     deletedAt?: Date;
     createdAt?: Date;

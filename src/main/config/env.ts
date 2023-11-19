@@ -21,7 +21,11 @@ const ENV = {
     emailHost: env.EMAIL_HOST || undefined,
     emailPort: Number(env.EMAIL_PORT) || 0,
     emailFrom: env.EMAIL_FROM || '',
-    stripeSecretKey: env.STRIPE_SECRET_KEY || ''
+    stripeSecretKey: env.STRIPE_SECRET_KEY || '',
+    paypalSecret: env.PAYPAL_API_SECRET || '',
+    paypalclient: env.PAYPAL_API_CLIENT || '',
+    paypalApi: env.PAYPA_API || '',
+    host: env.NODE_ENV === 'production' ? env.HOST : 'http://localhost:8080'
 };
 
 export default ENV;
