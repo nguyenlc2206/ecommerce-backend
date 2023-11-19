@@ -58,8 +58,6 @@ export class PaymentStripeServiceImpl<Entity extends KeyedObject> implements Pay
             client_reference_id: orderId,
             success_url: `${ENV.host}/checkout/success`,
             cancel_url: `${ENV.host}/checkout/fail`
-            // success_url: `${req.protocol}://${req.get('host')}/my-orders`,
-            // cancel_url: 'http://localhost:3000/cancel'
         });
 
         return success({ url: session.url });

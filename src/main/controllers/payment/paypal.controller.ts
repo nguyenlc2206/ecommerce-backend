@@ -31,8 +31,19 @@ export class PaypalController {
         if (response.isFailure()) return failure(response.error);
 
         console.log('>>>Check status:', response.data);
-        // * processing response
-        const template = fs.readFileSync(`${process.cwd()}/src/shared/templates/paymentSuccess.html`, 'utf8');
-        res.send(template);
+
+        if (response.data.toString() === 'COMPLETED') {
+            // * processing response
+            res.render(`${process.cwd()}/src/shared/templates/ejs/paymentStatus`, {
+                alert: true,
+                alertTitle: 'Great!!',
+                alertMessage: 'Payment with paypal success !!'
+            });
+        }
+        res.render(`${process.cwd()}/src/shared/templates/ejs/paymentStatus`, {
+            alert: true,
+            alertTitle: 'Oops!',
+            alertMessage: 'Something went wrong!'
+        });
     });
 }

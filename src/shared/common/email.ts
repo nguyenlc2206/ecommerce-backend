@@ -32,7 +32,7 @@ export class Email<T extends KeyedObject> implements EmailMethods<T> {
 
     /** overding sendEmailChangePassword method */
     async sendEmailChangePassword(entity: T): Promise<SMTPTransport.SentMessageInfo> {
-        const template = fs.readFileSync(`${process.cwd()}/src/shared/templates/sendOTP.html`, 'utf8');
+        const template = fs.readFileSync(`${process.cwd()}/src/shared/templates/html/sendOTP.html`, 'utf8');
         const compiledTemplate = handlebars.compile(template);
         const html = compiledTemplate(entity);
 
@@ -47,7 +47,7 @@ export class Email<T extends KeyedObject> implements EmailMethods<T> {
 
     /** overding sendEmailSupport method */
     async sendEmailSupport(entity: T): Promise<SMTPTransport.SentMessageInfo> {
-        const template = fs.readFileSync(`${process.cwd()}/src/shared/templates/support.html`, 'utf8');
+        const template = fs.readFileSync(`${process.cwd()}/src/shared/templates/html/support.html`, 'utf8');
         const compiledTemplate = handlebars.compile(template);
         const html = compiledTemplate(entity);
 
@@ -62,7 +62,7 @@ export class Email<T extends KeyedObject> implements EmailMethods<T> {
 
     /** overding sendEmailConfirmOrder method */
     async sendEmailConfirmOrder(entity: T): Promise<SMTPTransport.SentMessageInfo> {
-        const template = fs.readFileSync(`${process.cwd()}/src/shared/templates/confirmOrder.html`, 'utf8');
+        const template = fs.readFileSync(`${process.cwd()}/src/shared/templates/hmtl/confirmOrder.html`, 'utf8');
         const compiledTemplate = handlebars.compile(template);
 
         // register helper if need

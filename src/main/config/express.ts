@@ -30,6 +30,7 @@ export class ExpressConfig {
         /** Webhook config */
         StripeWebhook(this.app);
 
+        this.app.set('view engine', 'ejs');
         /** json pareser */
         this.app.use(express.json({ limit: '50mb' }));
         //url encoded
