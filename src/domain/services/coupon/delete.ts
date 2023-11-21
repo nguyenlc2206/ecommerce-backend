@@ -7,7 +7,6 @@ import AppError from '@ecommerce-backend/src/shared/common/appError';
 import { Either, failure, success } from '@ecommerce-backend/src/shared/common/either';
 import { AccountRequest } from '@ecommerce-backend/src/shared/types';
 
-import { CategoryModel } from '@ecommerce-backend/src/domain/models/Category';
 import { CouponRepository } from '@ecommerce-backend/src/domain/repositories/coupon';
 import { CouponModel } from '@ecommerce-backend/src/domain/models/Coupon';
 import { CouponRepositoryImpl } from '@ecommerce-backend/src/infrastructure/repositories/coupon.impl';
